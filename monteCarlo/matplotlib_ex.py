@@ -1,6 +1,6 @@
 import random
 import matplotlib
-matplotlib.use('Agg')  # Use a backend that does not require a GUI
+#matplotlib.use('Agg')  # Use a backend that does not require a GUI
 import matplotlib.pyplot as plt
 
 def rollDice():
@@ -57,7 +57,7 @@ x = 0
 
 # start this off @ 1, then add, and increase 50 to 500, then 1000
 while x < 50:
-    simple_bettor(10000,100,1000)
+    simple_bettor(10000,100,100000)
     x += 1
 
 
@@ -65,4 +65,4 @@ plt.ylabel('Account Value')
 plt.xlabel('Wager Count')
 plt.show()
 
-plt.savefig(f"matplotlib_ex.png")
+#plt.savefig(f"matplotlib_ex.png")
