@@ -55,7 +55,7 @@ def simple_bettor(funds,initial_wager,wager_count):
 
 x = 0
 
-# start this off @ 1, then add, and increase 50 to 500, then 1000
+# start this off @ 1, then add, and inxmscrease 50 to 500, then 1000
 while x < 50:
     simple_bettor(10000,100,100000)
     x += 1
