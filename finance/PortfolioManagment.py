@@ -3,8 +3,8 @@ import yfinance as yf
 import matplotlib.pyplot as plt
 import os
 import pandas as pd
-import matplotlib
-matplotlib.use('Agg')  # Use non-interactive backend
+#import matplotlib
+#matplotlib.use('Agg')  # Use non-interactive backend
 
 # Get the current working directory
 path = os.getcwd()
@@ -115,14 +115,11 @@ plt.axvline(np.mean(portfolio_final_values), color='g', linestyle='dashed', line
 plt.axvline(np.percentile(portfolio_final_values, 95), color='b', linestyle='dashed', linewidth=1.5, label="95th Percentile")
 plt.legend()
 plt.grid()
-plt.savefig(f"{path}\\png\\Portfolio_MonteCarlo_Histogram.png")
-plt.close()  # Close the plot to free memory
+
+
 
 # Create a summary DataFrame for portfolio results
 portfolio_df = pd.DataFrame(portfolio_results)
-
-# Save the portfolio results to a CSV file
-portfolio_df.to_csv(f"{path}\\csv\\portfolio_results.csv", index=False)
 
 # Display portfolio summary
 print(portfolio_df)
@@ -136,3 +133,12 @@ print("\nPortfolio Summary:")
 print(f"Total Purchase Value: ${total_purchase_value:,.2f} ARS")
 print(f"Total Mean Simulated Value: ${total_mean_value:,.2f} ARS")
 print(f"Total Value-at-Risk (5th Percentile): ${total_risk_value_at_5th_percentile:,.2f} ARS")
+
+plt.savefig(f"{path}\\png\\Portfolio_MonteCarlo_Histogram.png")
+
+plt.show()
+plt.close()  # Close the plot to free memory
+# Save the portfolio results to a CSV file
+portfolio_df.to_csv(f"{path}\\csv\\portfolio_results.csv", index=False)
+
+
