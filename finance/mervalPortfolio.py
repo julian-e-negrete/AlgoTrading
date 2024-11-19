@@ -13,9 +13,11 @@ path = os.getcwd()
 
 # Define your portfolio with shares and purchase prices
 portfolio = {
-    'MELI.BA': {'shares': 2, 'purchase_price': 18300},  
-    'TSLA.BA': {'shares': 1, 'purchase_price': 26600},         
-    'AMZN.BA': {'shares': 2, 'purchase_price': 1706}
+    'GGAL.BA': {'shares': 2, 'purchase_price': 6480},  
+    'CRES.BA': {'shares': 16, 'purchase_price': 1245},         
+    'BBAR.BA': {'shares': 2, 'purchase_price': 6460},
+    'LEDE.BA': {'shares': 20, 'purchase_price': 1360},
+    'YPFD.BA': {'shares': 1, 'purchase_price': 39100}
 }
 # Monte Carlo Simulation Parameters
 days = 126  # Number of trading days in 6 months
@@ -179,11 +181,11 @@ print(f"Sharpe Ratio: ${sharpe_ratio:,.2f} ARS")
 
 
 
-plt.savefig(f"{path}\\png\\Portfolio_MonteCarlo_Histogram.png")
+plt.savefig(f"{path}\\png\\Portfolio_MonteCarlo_Histogram_merval.png")
 
 plt.show()
 plt.close()  # Close the plot to free memory
 # Save the portfolio results to a CSV file
-portfolio_df.to_csv(f"{path}\\csv\\portfolio_results.csv", index=False)
+portfolio_df.to_csv(f"{path}\\csv\\portfolio_results_merval.csv", index=False)
 
 

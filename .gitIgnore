@@ -1,0 +1,8 @@
+venv/
+finance/png/
+finance/csv/
+
+.png*
+.csv*
+
+
