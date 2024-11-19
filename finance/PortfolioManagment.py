@@ -3,6 +3,8 @@ import yfinance as yf
 import matplotlib.pyplot as plt
 import os
 import pandas as pd
+from datetime import datetime, timedelta
+
 #import matplotlib
 #matplotlib.use('Agg')  # Use non-interactive backend
 
@@ -31,10 +33,14 @@ for ticker, details in portfolio.items():
 
     # Fetch historical data
     csv_filename = f'{path}\\csv\\{ticker}_data.csv'
-    data = yf.download(ticker, start='2024-01-01', end='2024-11-15')
-    if data.empty:
-        print(f"Skipping {ticker} due to missing data.")
+    try:
+        data = yf.download(ticker, start='2024-01-01', end=datetime.Today())
+        if data.empty:
+            raise ValueError(f"No data available for {ticker}")
+    except Exception as e:
+        print(f"Error downloading data for {ticker}: {e}")
         continue
+
     
     data.to_csv(csv_filename)
 
@@ -42,8 +48,9 @@ for ticker, details in portfolio.items():
     data['Daily Return'] = data['Adj Close'].pct_change()
 
     # Calculate mean and volatility from historical data in ARS
-    mu = data['Daily Return'].mean() * 252  # Annualized mean return in ARS
-    sigma = data['Daily Return'].std() * np.sqrt(252)  # Annualized volatility in ARS
+    data['Log Return'] = np.log(data['Adj Close'] / data['Adj Close'].shift(1))
+    mu = data['Log Return'].mean() * 252  # Annualized log return
+    sigma = data['Log Return'].std() * np.sqrt(252)  # Annualized volatility
 
     data.columns = data.columns.droplevel(1)  # Drop the 'Price' level in the multi-level columns
 
