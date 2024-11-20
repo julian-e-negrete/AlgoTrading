@@ -22,15 +22,25 @@ days = 126  # Number of trading days in 6 months
 simulations = 100000  # Number of simulations
 
 
+
+def get_local_risk_free_rate(nominal_yield, inflation_rate):
+    # Convert monthly inflation rate to annual inflation rate
+    annual_inflation_rate = (1 + inflation_rate)**12 - 1
+    
+    # Calculate the real risk-free rate using the formula:
+    real_risk_free_rate = (1 + nominal_yield) / (1 + annual_inflation_rate) - 1
+    
+    return real_risk_free_rate
+
 # Risk-free rate calculation
-def get_risk_free_rate():
+def get_risk_free_rate(days=730):
     """
     Get the risk-free rate using U.S. Treasury 10-Year yields from YFinance.
     This example uses '^TNX' for the 10-Year Treasury Yield.
     """
     try:
         # Fetch U.S. 10-Year Treasury yield data (^TNX)
-        tnx_data = yf.download("^TNX", start=datetime.today() - timedelta(days=365), end=datetime.today())
+        tnx_data = yf.download("^TNX", start=datetime.today() - timedelta(days), end=datetime.today(), interval='1h')
         
         if tnx_data.empty:
             raise ValueError(f"No data available for ^TNX")
@@ -62,7 +72,7 @@ for ticker, details in portfolio.items():
     # Fetch historical data
     csv_filename = f'{path}\\csv\\{ticker}_data.csv'
     try:
-        data = yf.download(ticker, start='2024-01-01', end=datetime.today())
+        data = yf.download(ticker, start=datetime.today() - timedelta(days=730), end=datetime.today(), interval='1h')
         if data.empty:
             raise ValueError(f"No data available for {ticker}")
     except Exception as e:
@@ -161,6 +171,13 @@ portfolio_df = pd.DataFrame(portfolio_results)
 
 # Display portfolio summary
 print(portfolio_df)
+
+# Example usage with nominal yield 40% and inflation rate 2.7% (monthly)
+nominal_yield = 0.40  # Example nominal yield (40%)
+inflation_rate = 0.027  # 2.7% monthly inflation rate (monthly)
+
+# Calculate the real risk-free rate
+risk_free_rate = get_local_risk_free_rate(nominal_yield, inflation_rate)
 
 risk_free_rate = get_risk_free_rate()
 print(f"Risk-Free Rate (6 months): {risk_free_rate:.2%}")

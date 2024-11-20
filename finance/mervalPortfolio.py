@@ -15,6 +15,7 @@ os.system("cls")
 
 # Define your portfolio with shares and purchase prices
 portfolio = {
+    #'MELI.BA': {'shares': 2, 'purchase_price': 18300},  
     'GGAL.BA': {'shares': 2, 'purchase_price': 6480},  
     'CRES.BA': {'shares': 16, 'purchase_price': 1245},         
     'BBAR.BA': {'shares': 2, 'purchase_price': 6460},
@@ -24,7 +25,12 @@ portfolio = {
 # Monte Carlo Simulation Parameters
 days = 126  # Number of trading days in 6 months
 simulations = 100000  # Number of simulations
-years = 20
+#years = 20
+
+
+
+end_date = ""
+start_date = ""
 def get_local_risk_free_rate(nominal_yield, inflation_rate):
     # Convert monthly inflation rate to annual inflation rate
     annual_inflation_rate = (1 + inflation_rate)**12 - 1
@@ -35,14 +41,14 @@ def get_local_risk_free_rate(nominal_yield, inflation_rate):
     return real_risk_free_rate
 # Risk-free rate calculation
 def get_risk_free_rate():
-    global years
+
     """
     Get the risk-free rate using U.S. Treasury 10-Year yields from YFinance.
     This example uses '^TNX' for the 10-Year Treasury Yield.
     """
     try:
         # Fetch U.S. 10-Year Treasury yield data (^TNX)
-        tnx_data = yf.download("^TNX", start=datetime.today() - timedelta(days=365 * years), end=datetime.today())
+        tnx_data = yf.download("^TNX", start=datetime.today() - timedelta(days=730), end=datetime.today())
         
         if tnx_data.empty:
             raise ValueError(f"No data available for ^TNX")
@@ -74,7 +80,7 @@ for ticker, details in portfolio.items():
     # Fetch historical data
     csv_filename = f'{path}\\csv\\{ticker}_data.csv'
     try:
-        data = yf.download(ticker, start=datetime.today() - timedelta(days=365 * years), end=datetime.today())
+        data = yf.download(ticker, start=datetime.today() - timedelta(days=730), end=datetime.today(),  interval='1h')
         if data.empty:
             raise ValueError(f"No data available for {ticker}")
     except Exception as e:
@@ -202,8 +208,9 @@ total_mean_value = portfolio_df['Mean Total Value'].sum()
 total_risk_value_at_5th_percentile = portfolio_df['5th Percentile Total Value (VaR)'].sum()
 sharpe_ratio = (mean_total_value - risk_free_rate) / np.std(portfolio_final_values)
 
-
-print(f"From Date : {datetime.today() - timedelta(days=365 * years)} to date: {datetime.today()}")
+print(data.head())
+print(data.tail())
+print(f"From Date : {datetime.today() - timedelta(days=720)} to date: {datetime.today()}")
 print("\nPortfolio Summary:")
 print(f"Total Purchase Value: ${total_purchase_value:,.2f} ARS")
 print(f"Total Mean Simulated Value: ${total_mean_value:,.2f} ARS")
