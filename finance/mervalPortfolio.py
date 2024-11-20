@@ -11,6 +11,8 @@ matplotlib.use('Agg')  # Use non-interactive backend
 # Get the current working directory
 path = os.getcwd()
 
+os.system("cls")
+
 # Define your portfolio with shares and purchase prices
 portfolio = {
     'GGAL.BA': {'shares': 2, 'purchase_price': 6480},  
@@ -22,17 +24,25 @@ portfolio = {
 # Monte Carlo Simulation Parameters
 days = 126  # Number of trading days in 6 months
 simulations = 100000  # Number of simulations
-
-
+years = 20
+def get_local_risk_free_rate(nominal_yield, inflation_rate):
+    # Convert monthly inflation rate to annual inflation rate
+    annual_inflation_rate = (1 + inflation_rate)**12 - 1
+    
+    # Calculate the real risk-free rate using the formula:
+    real_risk_free_rate = (1 + nominal_yield) / (1 + annual_inflation_rate) - 1
+    
+    return real_risk_free_rate
 # Risk-free rate calculation
 def get_risk_free_rate():
+    global years
     """
     Get the risk-free rate using U.S. Treasury 10-Year yields from YFinance.
     This example uses '^TNX' for the 10-Year Treasury Yield.
     """
     try:
         # Fetch U.S. 10-Year Treasury yield data (^TNX)
-        tnx_data = yf.download("^TNX", start=datetime.today() - timedelta(days=365), end=datetime.today())
+        tnx_data = yf.download("^TNX", start=datetime.today() - timedelta(days=365 * years), end=datetime.today())
         
         if tnx_data.empty:
             raise ValueError(f"No data available for ^TNX")
@@ -64,7 +74,7 @@ for ticker, details in portfolio.items():
     # Fetch historical data
     csv_filename = f'{path}\\csv\\{ticker}_data.csv'
     try:
-        data = yf.download(ticker, start='2024-01-01', end=datetime.today())
+        data = yf.download(ticker, start=datetime.today() - timedelta(days=365 * years), end=datetime.today())
         if data.empty:
             raise ValueError(f"No data available for {ticker}")
     except Exception as e:
@@ -164,8 +174,27 @@ portfolio_df = pd.DataFrame(portfolio_results)
 # Display portfolio summary
 print(portfolio_df)
 
-risk_free_rate = get_risk_free_rate()
+# Example usage with nominal yield 40% and inflation rate 2.7% (monthly)
+nominal_yield = 0.40  # Example nominal yield (40%)
+inflation_rate = 0.027  # 2.7% monthly inflation rate (monthly)
+
+# Calculate the real risk-free rate
+risk_free_rate = get_local_risk_free_rate(nominal_yield, inflation_rate)
 print(f"Risk-Free Rate (6 months): {risk_free_rate:.2%}")
+
+# Calculate total purchase value (initial value of the portfolio)
+total_purchase_value = portfolio_df['Purchase Total Value'].sum()
+
+# Calculate the total portfolio returns using the final simulation values
+portfolio_returns = (portfolio_final_values - total_purchase_value) / total_purchase_value
+
+# Calculate the mean and standard deviation of portfolio returns
+mean_portfolio_return = np.mean(portfolio_returns)
+std_dev_portfolio_return = np.std(portfolio_returns)
+
+# Calculate the Sharpe ratio
+sharpe_ratio = (mean_portfolio_return - risk_free_rate) / std_dev_portfolio_return
+
 
 # Calculate total portfolio metrics
 total_purchase_value = portfolio_df['Purchase Total Value'].sum()
@@ -173,12 +202,13 @@ total_mean_value = portfolio_df['Mean Total Value'].sum()
 total_risk_value_at_5th_percentile = portfolio_df['5th Percentile Total Value (VaR)'].sum()
 sharpe_ratio = (mean_total_value - risk_free_rate) / np.std(portfolio_final_values)
 
+
+print(f"From Date : {datetime.today() - timedelta(days=365 * years)} to date: {datetime.today()}")
 print("\nPortfolio Summary:")
 print(f"Total Purchase Value: ${total_purchase_value:,.2f} ARS")
 print(f"Total Mean Simulated Value: ${total_mean_value:,.2f} ARS")
 print(f"Total Value-at-Risk (5th Percentile): ${total_risk_value_at_5th_percentile:,.2f} ARS")
 print(f"Sharpe Ratio: ${sharpe_ratio:,.2f} ARS")
-
 
 
 plt.savefig(f"{path}\\png\\Portfolio_MonteCarlo_Histogram_merval.png")
