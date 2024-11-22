@@ -15,7 +15,7 @@ os.system("cls")
 
 # Define your portfolio with shares and purchase prices
 portfolio = {
-    #'MELI.BA': {'shares': 2, 'purchase_price': 18300},  
+    'MELI.BA': {'shares': 2, 'purchase_price': 18300},  
     'GGAL.BA': {'shares': 2, 'purchase_price': 6480},  
     'CRES.BA': {'shares': 16, 'purchase_price': 1245},         
     'BBAR.BA': {'shares': 2, 'purchase_price': 6460},
@@ -28,9 +28,10 @@ simulations = 100000  # Number of simulations
 #years = 20
 
 
+start_date = datetime.today() - timedelta(days=730)
+end_date = datetime.today()
 
-end_date = ""
-start_date = ""
+
 def get_local_risk_free_rate(nominal_yield, inflation_rate):
     # Convert monthly inflation rate to annual inflation rate
     annual_inflation_rate = (1 + inflation_rate)**12 - 1
@@ -48,7 +49,7 @@ def get_risk_free_rate():
     """
     try:
         # Fetch U.S. 10-Year Treasury yield data (^TNX)
-        tnx_data = yf.download("^TNX", start=datetime.today() - timedelta(days=730), end=datetime.today())
+        tnx_data = yf.download("^TNX", start=start_date, end=end_date)
         
         if tnx_data.empty:
             raise ValueError(f"No data available for ^TNX")
@@ -80,7 +81,7 @@ for ticker, details in portfolio.items():
     # Fetch historical data
     csv_filename = f'{path}\\csv\\{ticker}_data.csv'
     try:
-        data = yf.download(ticker, start=datetime.today() - timedelta(days=730), end=datetime.today(),  interval='1h')
+        data = yf.download(ticker, start=start_date, end=end_date,  interval='1h')
         if data.empty:
             raise ValueError(f"No data available for {ticker}")
     except Exception as e:
@@ -210,7 +211,7 @@ sharpe_ratio = (mean_total_value - risk_free_rate) / np.std(portfolio_final_valu
 
 print(data.head())
 print(data.tail())
-print(f"From Date : {datetime.today() - timedelta(days=720)} to date: {datetime.today()}")
+print(f"From Date : {start_date} to date: {end_date}")
 print("\nPortfolio Summary:")
 print(f"Total Purchase Value: ${total_purchase_value:,.2f} ARS")
 print(f"Total Mean Simulated Value: ${total_mean_value:,.2f} ARS")
