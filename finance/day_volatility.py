@@ -18,7 +18,7 @@ def get_7day_volatility_and_mean_return(stock_ticker):
         dict: A dictionary with the daily return, mean return, and volatility.
     """
     # Fetch historical daily data
-    start_date = (datetime.today() - timedelta(days=252)).strftime("%Y-%m-%d")
+    start_date = (datetime.today() - timedelta(days=720)).strftime("%Y-%m-%d")
     end_date =  (datetime.today() - timedelta(days=1)).strftime("%Y-%m-%d")
    
         
@@ -93,14 +93,14 @@ def SharpeRatio():
     df['volatility'] = pd.to_numeric(df['Variación'], errors='coerce')
 
     
-    # Calculate the daily returns (percentage change in 'Cierre Hoy')
-    df['Return'] = df['volatility'].pct_change()
     
+    min_volatility = df['volatility'].min()
+    print(min_volatility)
     # Drop missing values (first row will have NaN return)
     #df = df.dropna()
     
     #print(df['Return'])
-
+    """
     # Calculate the mean return and standard deviation of returns
     mean_return = df['Return'].mean()
     std_dev = df['Return'].std()
@@ -112,12 +112,12 @@ def SharpeRatio():
     sharpe_ratio = (mean_return - risk_free_rate) / std_dev
 
     print(f'Sharpe Ratio: {sharpe_ratio}')
-
+    """
 
 os.system("cls")
 
 # Example usage
-stock_ticker = "YPFD.BA"  # Replace with the stock ticker
+stock_ticker = "BBD.BA"  # Replace with the stock ticker
 
 daily_values = get_7day_volatility_and_mean_return(stock_ticker)
 
