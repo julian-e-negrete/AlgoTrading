@@ -20,6 +20,7 @@ def simulacion_montecarlo(ppi, ticker, tipo_instrumento, dias_a_proyectar, canti
     print(f"Bajando MarketData de {ticker}")
 
     market_data = ppi.marketdata.search(ticker, tipo_instrumento, "A-24HS", datetime(2015, 1, 1), datetime.today())
+    
     df_marketdata = get_dataframe_from_marketdata(market_data)
 
     df_marketdata_instrumento = df_marketdata[["date", "price"]]
@@ -77,7 +78,7 @@ if __name__ == '__main__':
     # Change login credential to connect to the API
     ppi.account.login_api(public_key, private_key)
 
-    ticker = "YPFD"
+    ticker = "CEPU"
 
-    simulacion_montecarlo(ppi, ticker, "Acciones", dias_a_proyectar = 90, cantidad_simulaciones = 10000, precio_a_evaluar = 44300)
+    simulacion_montecarlo(ppi, ticker, "Acciones", dias_a_proyectar = 90, cantidad_simulaciones = 10000, precio_a_evaluar = 1540)
 
