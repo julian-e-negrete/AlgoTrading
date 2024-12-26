@@ -21,7 +21,11 @@ def main():
     try:
         # Change sandbox variable to False to connect to production environment
         ppi = PPI(sandbox=False)
+        
+        # Change login credential to connect to the API
+        #ppi.account.login_api('UG5kSHRnVlF5dVdQT2JQUGtRVlM=', 'YjA4MGM3ZjMtZGNmOS00NWU1LWIyZGEtMmQ4ZWM5MmZhOTA0')
 
+        
         account = Account(ppi)
              
         # Get available balance
@@ -34,13 +38,27 @@ def main():
         
         market = Market_data(account.ppi)
 
-        market.get_instruments()
+        #market.get_instruments()
         
-        market.get_market_data()
+        #market.get_market_data("BA37D", "Bonos", "A-48HS")
         
-        market.get_instrument()
+        #market.get_instrument("BA37D", "Byma", "Bonos")
         
-        market.get_instrument_realtime()
+        # BA37D 100 ruedas a $76.300
+        #market.estimate_bond("BA37D", 100, 76300)
+        #market.search_current_book("BA37D", "Bonos","A-48HS" )
+        
+        market.add_instrument("CRES", "ACCIONES", "A-24HS")
+        #market.add_instrument("YFCIO", "ON", "A-48HS")
+        market.add_instrument("BA37D", "BONOS", "INMEDIATA")
+        #market.add_instrument("AL30D", "BONOS", "INMEDIATA")
+        #market.add_instrument("DLR/MAR25", "FUTUROS", "INMEDIATA")
+
+        # Start the connection
+        market.start()
+        
+        
+        #market.get_instrument_realtime()
         
         # Set up and start real-time market data connection
         #setup_market_data_realtime()
@@ -48,7 +66,7 @@ def main():
 
     except Exception as e:
         print(datetime.now())
-        print(e)
+        print(f"ERROR: '{e}' ")
 
 
 if __name__ == '__main__':
