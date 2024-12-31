@@ -2,8 +2,12 @@
 from ppi_client.ppi import PPI
 
 from ppi_client.models.instrument import Instrument
-from datetime import datetime
+from datetime import datetime, timedelta
 from ppi_client.models.estimate_bonds import EstimateBonds
+
+from tabulate import tabulate 
+
+
 import json
 import traceback
 import math
@@ -26,11 +30,30 @@ class Market_data:
         # Getting instrument types
         print("\nGetting instrument types")
         instruments = self.ppi.configuration.get_instrument_types()
-        for item in instruments:
-            print(item)
             
+        return instruments
             
+    def select_instrument(self):
+        instruments = self.get_instruments()
+        for i in range(len(instruments)):
+            print(f"{i}) -- {instruments[i]}")    
+        
+        while True:
+                
+            option :int = input("Ingrese el numero de instrumento: ")
+            try:
+                option = int(option)
+            except Exception as e:
+                return e
+            print(len(instruments))
+            if option < 0 or option > len(instruments) -1:
+                print("Seleccione una opcion correcta.")
+            else:
+                break
             
+        return instruments[option]
+    
+    
     def get_markets(self):
         # Getting markets
         print("\nGetting markets")
@@ -121,12 +144,16 @@ class Market_data:
         print("\nSearching Current Book")
         current_book = self.ppi.marketdata.book(ticker.upper(), type_, time)
         print(current_book)
+        
+        
     
     # search historic market data
-    def get_historical_data(self):
+    def get_historical_data(self, ticker: str, type_: str, time: str):
         print("\nSearching MarketData")
-        ticker = input("ingrese el ticker que quiere buscar: ")
-        
+        if ticker == "":
+            ticker = input("ingrese el ticker que quiere buscar: ")
+            type_ = self.select_instrument()
+
         while True:
             date_input = input("Enter start date (YYYY-MM-DD): ")
             date_input2 = input("Enter end date (YYYY-MM-DD): ")
@@ -140,12 +167,57 @@ class Market_data:
                 print("Invalid date format. Please use YYYY-MM-DD.")
 
 
-        market_data = self.ppi.marketdata.search(ticker.upper(), "Acciones", "A-48HS", start_date, end_date)
-        for ins in market_data:
-            print("%s - %s - Volume %s - Opening %s - Min %s - Max %s" % (
-                ins['date'], ins['price'], ins['volume'], ins['openingPrice'], ins['min'], ins['max']))
+        market_data = self.ppi.marketdata.search(ticker.upper(), type_, time, start_date, end_date)
+        
+        table_data = [
+            [ins["date"], ins["price"], ins["volume"], ins["openingPrice"], ins["min"], ins["max"]]
+            for ins in market_data
+        ]
+        
+                # Define headers
+        headers = ["Date", "Price", "Volume", "Opening Price", "Min", "Max"]
+
+        # Set the width for the box
+        box_width = 12
+
+        # Generate the formatted box
+        print("-" * (box_width+ 2))
+        print(f"| {ticker.center(box_width - 2)} |")
+        print("-" * (box_width + 2))
+        # Print the table
+        print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        
+        return market_data
+            
+            
     
-    
+    # Search intraday data
+    def get_intraday_market_data(self, ticker, type_instrument, time):
+        # Search Intraday MarketData
+        print("\nSearching Intraday MarketData")
+        intraday_market_data = self.ppi.marketdata.intraday(ticker.upper(), type_instrument, time)
+        
+        
+        box_width = 12
+
+         # Generate the formatted box
+        print("-" * (box_width + 2))
+        print(f"| {ticker.center(box_width - 2)} |")
+        print("-" * (box_width + 2))
+        
+            
+        table_data = [
+            [ins["date"], ins["price"], ins["volume"]]
+            for ins in intraday_market_data
+        ]
+        
+                # Define headers
+        headers = ["Date", "Price", "Volume", "Opening Price", "Min", "Max"]
+        
+        print(tabulate(table_data, headers=headers, tablefmt="grid"))
+
+        
+       
     
     # Search Current MarketData        
     def get_market_data(self, ticker, type_instrument, time):
@@ -162,14 +234,6 @@ class Market_data:
 
         #print(current_market_data)
         print(f"fecha :{formatted_date}\t Precio: {current_market_data["price"]}\t Volumen: {current_market_data["volume"]}")
-        
-    # Search intraday data
-    def get_intraday_market_data(self):
-        # Search Intraday MarketData
-        print("\nSearching Intraday MarketData")
-        intraday_market_data = self.ppi.marketdata.intraday("GGAL", "Acciones", "A-48HS")
-        for intra in intraday_market_data:
-            print(intra)
                
     #endregion
     
@@ -177,11 +241,11 @@ class Market_data:
     def estimate_bond(self, ticker, cantidad, precio):
         print("\nEstimate bond\n")
         if(ticker == ""):
-            ticker :str= input("Ingrese el ticker: ").upper()
+            ticker :str= input("Ingrese el ticker: ")
             cantidad :int = input("Ingrese la cantidad: ")
             precio :float = input("Ingrese el precio: ")
             
-        estimate = self.ppi.marketdata.estimate_bonds(EstimateBonds(ticker=ticker, date=datetime.today(), 
+        estimate = self.ppi.marketdata.estimate_bonds(EstimateBonds(ticker=ticker.upper(), date=datetime.today(), 
         quantityType="PAPELES", quantity=cantidad, price=precio))
         
         
@@ -212,15 +276,10 @@ class Market_data:
            
         print(estimate["tir"])    
             
-                
-        
-        
-        
-        
-        
+                  
     #region realtime
     
-    def add_instrument(self, ticker, type_, settlement):
+    def add_instrument(self, ticker: str, type_ :str, settlement: str):
         """
         Adds an instrument to the subscription list.
 
@@ -230,6 +289,7 @@ class Market_data:
             settlement (str): The settlement type (e.g., A-48HS, INMEDIATA).
         """
         self.instruments.append((ticker, type_, settlement))
+        
 
     def on_connect(self):
         """Handles the connection to the real-time market data."""
@@ -251,6 +311,9 @@ class Market_data:
     def on_market_data(self, data):
         try:
             msg = json.loads(data)
+            if(msg['Price'] == 78000):
+                print("LLEGO A 78000")
+                return
             if msg.get("Trade"):
                 print("%s [%s-%s] Price %.2f Volume %.2f" % (
                     msg['Date'], msg['Ticker'], msg['Settlement'], msg['Price'], msg['VolumeAmount']))
@@ -281,6 +344,9 @@ class Market_data:
             traceback.print_exc()
                 
     #endregion
+    
+    
+    
     
     
     
