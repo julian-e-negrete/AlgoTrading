@@ -26,15 +26,15 @@ class Market_data:
     
     
     #region types of
-    def get_instruments(self):
+    def get_instruments_type(self):
         # Getting instrument types
         print("\nGetting instrument types")
         instruments = self.ppi.configuration.get_instrument_types()
             
         return instruments
             
-    def select_instrument(self):
-        instruments = self.get_instruments()
+    def select_instrument_type(self):
+        instruments = self.get_instruments_type()
         for i in range(len(instruments)):
             print(f"{i}) -- {instruments[i]}")    
         
@@ -135,9 +135,30 @@ class Market_data:
         # Search Instrument
         print("\nSearching instruments")
         instruments = self.ppi.marketdata.search_instrument(ticker.upper(), "", market, type_instrument)
+        
+        table_data = [
+            [ins["ticker"], ins["description"], ins["currency"], ins["type"]]
+            for ins in instruments
+        ]
+        
+                # Define headers
+        headers = ["ticker", "description", "currency", "type"]
+
+        # Set the width for the box
+        box_width = 12
+
+        # Generate the formatted box
+        print("-" * (box_width+ 2))
+        print(f"| {ticker.center(box_width - 2)} |")
+        print("-" * (box_width + 2))
+        # Print the table
+        print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        
+        """
         for ins in instruments:
             print(f"Ticker: {ins["ticker"]}\t Descripcion: {ins["description"]}\t Moneda: {ins["currency"]}\t Tipo: {ins["type"]}")
-            
+        """ 
+        return instruments
             
     def search_current_book(self, ticker: str, type_: str, time: str):
         # Search Current Book
@@ -148,23 +169,28 @@ class Market_data:
         
     
     # search historic market data
-    def get_historical_data(self, ticker: str, type_: str, time: str):
+    def get_historical_data(self, ticker: str, type_: str, time: str, start_date, end_date):
+        
         print("\nSearching MarketData")
         if ticker == "":
             ticker = input("ingrese el ticker que quiere buscar: ")
-            type_ = self.select_instrument()
-
-        while True:
-            date_input = input("Enter start date (YYYY-MM-DD): ")
-            date_input2 = input("Enter end date (YYYY-MM-DD): ")
-            try:
-                # Try to parse the input into a datetime object
-                start_date = datetime.strptime(date_input, "%Y-%m-%d")
-                end_date = datetime.strptime(date_input2, "%Y-%m-%d")
-                
-                break  # Exit the loop if the date is valid
-            except ValueError:
-                print("Invalid date format. Please use YYYY-MM-DD.")
+            type_ = self.select_instrument_type()
+        try:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d")
+            end_date = datetime.strptime(end_date, "%Y-%m-%d")
+            
+        except Exception as error:
+                while True:
+                    date_input = input("Enter start date (YYYY-MM-DD): ")
+                    date_input2 = input("Enter end date (YYYY-MM-DD): ")
+                    try:
+                        # Try to parse the input into a datetime object
+                        start_date = datetime.strptime(date_input, "%Y-%m-%d")
+                        end_date = datetime.strptime(date_input2, "%Y-%m-%d")
+                        
+                        break  # Exit the loop if the date is valid
+                    except ValueError:
+                        print("Invalid date format. Please use YYYY-MM-DD.")
 
 
         market_data = self.ppi.marketdata.search(ticker.upper(), type_, time, start_date, end_date)
@@ -228,12 +254,14 @@ class Market_data:
         current_market_data = self.ppi.marketdata.current(ticker.upper(), type_instrument, time)
         print(ticker.upper())
         print("-----------------------------------------")
-        date_object = datetime.strptime(current_market_data["date"],  "%Y-%m-%dT%H:%M:%S%z")
+        
+        #date_object = datetime.strptime(current_market_data["date"],  "%Y-%m-%dT%H:%M:%S%z")
 
-        formatted_date = date_object.strftime("%d-%m-%Y")  # Example: "23-Dec-2024"
+        #formatted_date = date_object.strftime("%d-%m-%Y")  # Example: "23-Dec-2024"
 
         #print(current_market_data)
-        print(f"fecha :{formatted_date}\t Precio: {current_market_data["price"]}\t Volumen: {current_market_data["volume"]}")
+        print(f"fecha :{current_market_data["date"],}\t Precio: {current_market_data["price"]}\t Volumen: {current_market_data["volume"]}")
+           
                
     #endregion
     

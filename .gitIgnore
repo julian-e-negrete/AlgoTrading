@@ -1,8 +1,10 @@
-venv/
+myvenv/
 finance/png/
 finance/csv/
 
 *.png
 *.csv
 
+
+finance/PPI/__pycache__/
 

@@ -27,6 +27,7 @@ days = 126  # Number of trading days in 6 months
 simulations = 100000  # Number of simulations
 
 def get_local_risk_free_rate(nominal_yield, inflation_rate):
+    
     # Convert monthly inflation rate to annual inflation rate
     annual_inflation_rate = (1 + inflation_rate)**12 - 1
     
