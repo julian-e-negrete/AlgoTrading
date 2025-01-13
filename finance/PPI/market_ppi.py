@@ -194,7 +194,7 @@ class Market_data:
 
 
         market_data = self.ppi.marketdata.search(ticker.upper(), type_, time, start_date, end_date)
-        
+        """
         table_data = [
             [ins["date"], ins["price"], ins["volume"], ins["openingPrice"], ins["min"], ins["max"]]
             for ins in market_data
@@ -212,7 +212,7 @@ class Market_data:
         print("-" * (box_width + 2))
         # Print the table
         print(tabulate(table_data, headers=headers, tablefmt="grid"))
-        
+        """
         return market_data
             
             
@@ -249,9 +249,9 @@ class Market_data:
     def get_market_data(self, ticker, type_instrument, time):
         if(ticker == ""):
             ticker = input("ingrese el ticker que quiere buscar: ")
-            
-        print("\nSearching Current MarketData")
         current_market_data = self.ppi.marketdata.current(ticker.upper(), type_instrument, time)
+        """
+        print("\nSearching Current MarketData")
         print(ticker.upper())
         print("-----------------------------------------")
         
@@ -261,7 +261,8 @@ class Market_data:
 
         #print(current_market_data)
         print(f"fecha :{current_market_data["date"],}\t Precio: {current_market_data["price"]}\t Volumen: {current_market_data["volume"]}")
-           
+        """
+        return current_market_data
                
     #endregion
     

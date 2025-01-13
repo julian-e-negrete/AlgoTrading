@@ -96,21 +96,83 @@ def main():
     print(f"Volatilidad en {delta} dias: {(annual_volatility * 100):.2f}%")
     
     
+    precio_accion = market.get_market_data("METR", "ACCIONES", "A-24HS")
     
-    S = 2790  # Precio actual de la acción (en pesos)
+    
+    precio_opcion29 = market.get_market_data("METC2900FE", "OPCIONES", "A-24HS")
+    
+    precio_opcion31 = market.get_market_data("METC3100FE", "OPCIONES", "A-24HS")
+
+    precio_opcion33 = market.get_market_data("METC3300FE", "OPCIONES", "A-24HS")
+
+    precio_opcion35 = market.get_market_data("METC3500FE", "OPCIONES", "A-24HS")
+
+    
+    S = precio_accion["price"]  # Precio actual de la acción (en pesos)
     K = 2900  # Precio de ejercicio (en pesos)
     days_to_expiry = 44  # Días hasta el vencimiento
     r = 0.048  # Tasa libre de riesgo (4.8% anual, en proporción) sovereing bonds interest rate in a year
     T = days_to_expiry / 365  # Tiempo hasta el vencimiento en años 
-    market_price = 145  # Prima observada en el mercado
+    market_price = precio_opcion29["price"]  # Prima observada en el mercado
     
+    box_width = 70
+
+    
+    print("-" * (box_width+ 2))
+    
+    
+    """ METC2900FE """
+    print(f"Precio actual de la opcion CALL(METC2900FE): {market_price}")
     call_price = black_scholes_model(S, K, T, r, annual_volatility)
-    #print(f"Volatilidad condicional para el vencimiento: {sigma * 100:.2f}%")
-    print(f"Precio de la opción Call: {call_price:.2f} pesos")
+
+    print(f"Precio de la opción Call(METC2900FE) calculado: {call_price:.2f} pesos")
+    
+    iv = implied_volatility_call(S, K, T, r, market_price)
+    print(f"Volatilidad implícita: {iv * 100:.2f}%")
+    print("-" * (box_width + 2))
+ 
+    """ METC3100FE """
+        
+    
+    market_price = precio_opcion31["price"]  # Prima observada en el mercado
+    K = 3100
+    print(f"Precio actual de la opcion CALL(METC3100FE): {market_price}")
+    call_price = black_scholes_model(S, K, T, r, annual_volatility)
+
+    print(f"Precio de la opción Call(METC3100FE) calculado: {call_price:.2f} pesos")
+    
     # Calcular la volatilidad implícita
     iv = implied_volatility_call(S, K, T, r, market_price)
     print(f"Volatilidad implícita: {iv * 100:.2f}%")
     
+    print("-" * (box_width + 2))
+
+    market_price = precio_opcion33["price"]  # Prima observada en el mercado
+    K = 3300
+    print(f"Precio actual de la opcion CALL(METC3300FE): {market_price}")
+    call_price = black_scholes_model(S, K, T, r, annual_volatility)
+
+    print(f"Precio de la opción Call(METC3300FE) calculado: {call_price:.2f} pesos")
+    
+    # Calcular la volatilidad implícita
+    iv = implied_volatility_call(S, K, T, r, market_price)
+    print(f"Volatilidad implícita: {iv * 100:.2f}%")
+    
+    print("-" * (box_width + 2))
+    
+
+    market_price = precio_opcion35["price"]  # Prima observada en el mercado
+    K = 3500
+    print(f"Precio actual de la opcion CALL(METC3500FE): {market_price}")
+    call_price = black_scholes_model(S, K, T, r, annual_volatility)
+
+    print(f"Precio de la opción Call(METC3500FE) calculado: {call_price:.2f} pesos")
+    
+    # Calcular la volatilidad implícita
+    iv = implied_volatility_call(S, K, T, r, market_price)
+    print(f"Volatilidad implícita: {iv * 100:.2f}%")
+    
+    print("-" * (box_width + 2))
 
     try:
         print("------")
