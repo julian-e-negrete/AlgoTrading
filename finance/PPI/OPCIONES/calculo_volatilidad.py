@@ -17,14 +17,17 @@ from scipy.optimize import brentq
 from datetime import datetime
 import json
 import traceback
+import sys
 import os
 
-import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+# Dynamically add the parent directory (PPI) to sys.path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.abspath(os.path.join(current_dir, '..'))
+sys.path.append(parent_dir)
 
-from PPI.account_ppi import Account
-from PPI.market_ppi import Market_data
+# Now import the required modules
 
+from classes import Account, Market_data
 
 
 
@@ -98,6 +101,7 @@ def main():
     
     precio_accion = market.get_market_data("METR", "ACCIONES", "A-24HS")
     
+    precio_opcion27 = market.get_market_data("METC2700FE", "OPCIONES", "A-24HS")
     
     precio_opcion29 = market.get_market_data("METC2900FE", "OPCIONES", "A-24HS")
     
@@ -109,19 +113,30 @@ def main():
 
     
     S = precio_accion["price"]  # Precio actual de la acción (en pesos)
-    K = 2900  # Precio de ejercicio (en pesos)
+    K = 2700  # Precio de ejercicio (en pesos)
     days_to_expiry = 44  # Días hasta el vencimiento
     r = 0.048  # Tasa libre de riesgo (4.8% anual, en proporción) sovereing bonds interest rate in a year
     T = days_to_expiry / 365  # Tiempo hasta el vencimiento en años 
-    market_price = precio_opcion29["price"]  # Prima observada en el mercado
+    market_price = precio_opcion27["price"]  # Prima observada en el mercado
     
     box_width = 70
 
-    
     print("-" * (box_width+ 2))
+    """ METC2700FE """
+    print(f"Precio actual de la opcion CALL(METC2700FE): {market_price}")
+    call_price = black_scholes_model(S, K, T, r, annual_volatility)
+
+    print(f"Precio de la opción Call(METC2700FE) calculado: {call_price:.2f} pesos")
+    
+    iv = implied_volatility_call(S, K, T, r, market_price)
+    print(f"Volatilidad implícita: {iv * 100:.2f}%")
+    print("-" * (box_width + 2))
     
     
     """ METC2900FE """
+    market_price = precio_opcion29["price"]  # Prima observada en el mercado
+    K = 2900 
+    
     print(f"Precio actual de la opcion CALL(METC2900FE): {market_price}")
     call_price = black_scholes_model(S, K, T, r, annual_volatility)
 
@@ -131,9 +146,8 @@ def main():
     print(f"Volatilidad implícita: {iv * 100:.2f}%")
     print("-" * (box_width + 2))
  
+ 
     """ METC3100FE """
-        
-    
     market_price = precio_opcion31["price"]  # Prima observada en el mercado
     K = 3100
     print(f"Precio actual de la opcion CALL(METC3100FE): {market_price}")

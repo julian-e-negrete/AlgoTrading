@@ -11,7 +11,7 @@ from tabulate import tabulate
 import json
 import traceback
 import math
-
+import os
 
 
 
@@ -45,7 +45,6 @@ class Market_data:
                 option = int(option)
             except Exception as e:
                 return e
-            print(len(instruments))
             if option < 0 or option > len(instruments) -1:
                 print("Seleccione una opcion correcta.")
             else:
@@ -175,6 +174,7 @@ class Market_data:
         if ticker == "":
             ticker = input("ingrese el ticker que quiere buscar: ")
             type_ = self.select_instrument_type()
+            os.system("cls")
         try:
             start_date = datetime.strptime(start_date, "%Y-%m-%d")
             end_date = datetime.strptime(end_date, "%Y-%m-%d")

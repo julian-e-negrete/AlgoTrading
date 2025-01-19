@@ -6,8 +6,8 @@ import pandas as pd
 import numpy as np
 import os
 
-from account_ppi import Account
-from market_ppi import Market_data
+from classes.account_ppi import Account
+from classes.market_ppi import Market_data
 
 
 def main():
@@ -28,18 +28,20 @@ def main():
             'transactions': [
                 {'shares': 73, 'purchase_price': 2740},
                 {'shares': 27, 'purchase_price': 2904},
-                {'shares': 100, 'purchase_price': 2879.21}
+                {'shares': 100, 'purchase_price': 2879.21},
+                {'shares': 29, 'purchase_price': 2740}
                 
             ]
         },
-        'BBD': {
-            'type': 'CEDEARS',
-            'transactions': [{'shares': 11, 'purchase_price': 2330}]
-        },
-        'NU': {
-            'type': 'CEDEARS',
-            'transactions': [{'shares': 4, 'purchase_price': 6680}]
-        },
+        # 'BBD': {
+        #     'type': 'CEDEARS',
+        #     'transactions': [{'shares': 11, 'purchase_price': 2330}]
+        # },
+        # 'NU': {
+        #     'type': 'CEDEARS',
+        #     'transactions': [{'shares': 4, 'purchase_price': 6680}]
+        # }
+        # ,
         'BA37D': {
             'type': 'BONOS',
             'transactions': [
@@ -52,7 +54,7 @@ def main():
     total_purchase_cost = 0
     # 20.000 base gracias a la venta de opciones de compra de METR(METC2900FE) por 20.000(precio de la prima: ~$211.68) 
     # + 3.5 * 1220 que es el pago de intereses de GD41
-    total_current_value = 20000 
+    total_current_value =  3.5 * 1120
     
 
     for ticker, details in portfolio.items():
@@ -83,6 +85,7 @@ def main():
         print(f"  Purchase Cost: {purchase_cost:.2f}")
         print(f"  Current Value: {current_value:.2f}")
         print(f"  Gain/Loss: {current_value - purchase_cost:.2f}")
+        print(f"  Gain/Loss%: {((current_value - purchase_cost) * 100 /purchase_cost):.2f}%")
         print("-" * 30)
         
      # Print portfolio totals

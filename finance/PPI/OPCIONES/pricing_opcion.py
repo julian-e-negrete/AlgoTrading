@@ -10,15 +10,17 @@ import numpy as np
 from datetime import datetime
 import json
 import traceback
+import sys
 import os
 
-import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+# Dynamically add the parent directory (PPI) to sys.path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.abspath(os.path.join(current_dir, '..'))
+sys.path.append(parent_dir)
 
-from PPI.account_ppi import Account
-from PPI.market_ppi import Market_data
+# Now import the required modules
 
-from Opciones_class import Opciones
+from classes import Account, Market_data, Instrument, Opciones
 
 import QuantLib as ql
 
@@ -63,42 +65,51 @@ def main():
 
     # Define option parameters
     spot_price = precio_accion["price"]  # Current price of the stock
-    strike_price = 3100  # Strike price
+    strike_price = 2900  # Strike price
     expiry = ql.Date(21, 2, 2025)  # Expiry date
     risk_free_rate = 0.048  # 4.8% risk-free rate(1 year bond interes rate usa sovereign bonds)
     volatility = annual_volatility  
     
-    risk_free_return = risk_free_rate / 252  # Tasa libre de riesgo diaria
-    excess_return = Opciones_class.df['Daily Return'].mean() - risk_free_return
-    sharpe_ratio = excess_return / Opciones_class.df['Daily Return'].std()
+    # Sharpe Ratio
+    sharpe_ratio = Opciones_class.instrument_cl.Sharpe_ratio()
 
     print(f"Sharpe Ratio: {sharpe_ratio:.2f}")
 
     option_price , message = quantlib_option_price(spot_price, strike_price, expiry, risk_free_rate, volatility)
     
     print(message)
-    total_value = strike_price * 100 + 2900 * 100
+    total_value = 3100 * 100 + 2900 * 100
     #option_position = option_price * 100
     
-    option_position = 20000
+    # calculo en base a la compra de una opcion put de venta en 2700(2720 es la tolerancia maxima)
+    # 6761 * 100 
+    option_position = 20000  
     
     # 2830 es el precio de compra de las acciones promedio
     tolerance_max = (2830 * 200 - option_position) / 200
+    dif_porc = (((spot_price - tolerance_max) * 100 / spot_price) * -1)
     ganan_max = total_value + option_position
     
-    print(f"valor minimo de accion en el cual se generan 0 ganancias: ${tolerance_max:.2f}")
+    print(f"valor minimo de accion en el cual se generan 0 ganancias: ${tolerance_max:.2f}, \npor lo tanto la accion deberia sufrir una baja del: {dif_porc:.2f}%")
     print(f"Ganancia maxima en venta en strike price + venta de primas: ${ganan_max:.2f} con una inversion de : ${2830 * 200}")
-    print(f"Ganancia Nominal: ${(ganan_max - 2830*200):.2f}")
+    print(f"Ganancia Nominal: ${(ganan_max - 2830*200):.2f}, +{((ganan_max - 2830*200) * 100 / (2830*200)):.2f}%") 
     print(f"la venta en strike price + primas es igual al precio de la accion evolucionando a : ${(ganan_max/200):.2f}")
     
     conditional_volatility, message  = Opciones_class.garch_model(delta)
+    
     #print(message)
 
     volatility = conditional_volatility
     
     quantlib_option_price(spot_price, strike_price, expiry, risk_free_rate, volatility)
     
+    # El valor nocional es el precio del subyacente multiplicado por el tamaño del contrato.(el tamaño de los contratos es por cada opcion 100 acciones subyacentes)
+    valor_nocional = 2920 * 100
+    print("\n \nGarantia necesaria para la posicion actual: ")
+    print(f"\nGarantia sobre la posicion de venta de METC2900FE: ${(valor_nocional * 0.21):.2f}")
+    print(f"Garantia sobre la posicion de venta de METC3100FE: ${(valor_nocional * 0.10):.2f}\n")
     
+    print(f"Garantia Total: ${(valor_nocional * 0.21 + valor_nocional * 0.10):.2f}")
     
     
     

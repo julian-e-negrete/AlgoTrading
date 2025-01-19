@@ -11,8 +11,8 @@ import traceback
 import os
 
 
-from account_ppi import Account 
-from market_ppi import Market_data
+from finance.PPI.classes.account_ppi import Account 
+from finance.PPI.classes.market_ppi import Market_data
 
 
 

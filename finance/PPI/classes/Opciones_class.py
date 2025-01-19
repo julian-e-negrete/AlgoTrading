@@ -17,11 +17,11 @@ from scipy.optimize import brentq
 
 import os
 
-import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
-from PPI.account_ppi import Account
-from PPI.market_ppi import Market_data
+
+from classes.account_ppi import Account
+from classes.market_ppi import Market_data
+from classes.Instrument_class import Instrument
 
 
 
@@ -33,17 +33,11 @@ class Opciones:
         self.account = account_p       
         self.market = market_p
         self.df = df_p
-        self.structurate_df(self.df)
-        
-    def structurate_df(self, df_p):
-        df_p['date'] = pd.to_datetime(df_p['date'])
-        df_p.set_index('date', inplace=True)
+        self.instrument_cl = Instrument(self.df)
 
-        # Calcular los rendimientos diarios de los precios
-        df_p['Daily Return'] = df_p['price'].pct_change()
-        df_p['Daily Return'] = df_p['Daily Return'].fillna(0)
+        self.df = self.instrument_cl.df
         
-        self.df = df_p
+ 
   
     def daily_volatility(self ):
         
