@@ -8,8 +8,6 @@ import numpy as np
 
 
 from datetime import datetime
-import json
-import traceback
 import sys
 import os
 
@@ -65,6 +63,7 @@ def main():
 
     # Define option parameters
     spot_price = precio_accion["price"]  # Current price of the stock
+    print(f"Actual stock price: {spot_price}")
     strike_price = 2900  # Strike price
     expiry = ql.Date(21, 2, 2025)  # Expiry date
     risk_free_rate = 0.048  # 4.8% risk-free rate(1 year bond interes rate usa sovereign bonds)
@@ -77,24 +76,32 @@ def main():
 
     option_price , message = quantlib_option_price(spot_price, strike_price, expiry, risk_free_rate, volatility)
     
-    print(message)
+    print("METC2900FE ", message)
     total_value = 3100 * 100 + 2900 * 100
+    posiciones = 229
     #option_position = option_price * 100
     
     # calculo en base a la compra de una opcion put de venta en 2700(2720 es la tolerancia maxima)
     # 6761 * 100 
-    option_position = 20000  
-    
+    option_position = 29 * 2740 - (29 * 2740 * 0.0075) - 6258 
+    posiciones -= 29
+    print(f"primas obtenidas por venta de opcines: {option_position}")
     # 2830 es el precio de compra de las acciones promedio
-    tolerance_max = (2830 * 200 - option_position) / 200
+    inv_inicial = 2830 * posiciones + 2740 * 29 - 20000
+    tolerance_max = (inv_inicial - option_position) / posiciones
     dif_porc = (((spot_price - tolerance_max) * 100 / spot_price) * -1)
     ganan_max = total_value + option_position
+
+    print(f"valor minimo de accion en el cual se generan 0 ganancias: ${tolerance_max:.2f}")
+    if( not(dif_porc % -1 == 0) ):
+        print(f"\nabajo del precio de tolerancia por: -{dif_porc:.2f}%")
+        print(f"Actuales perdidas: $ {(spot_price * posiciones) - (tolerance_max * posiciones) :.2f}")
     
-    print(f"valor minimo de accion en el cual se generan 0 ganancias: ${tolerance_max:.2f}, \npor lo tanto la accion deberia sufrir una baja del: {dif_porc:.2f}%")
-    print(f"Ganancia maxima en venta en strike price + venta de primas: ${ganan_max:.2f} con una inversion de : ${2830 * 200}")
-    print(f"Ganancia Nominal: ${(ganan_max - 2830*200):.2f}, +{((ganan_max - 2830*200) * 100 / (2830*200)):.2f}%") 
-    print(f"la venta en strike price + primas es igual al precio de la accion evolucionando a : ${(ganan_max/200):.2f}")
-    
+    print(f"Inversion inicial: ${inv_inicial}")
+    print(f"Venta en strike price + venta de primas: ${ganan_max:.2f}.")
+    print(f"Ganancia Nominal: ${(ganan_max - inv_inicial):.2f}, +{((ganan_max - inv_inicial) * 100 / (inv_inicial)):.2f}%") 
+    print(f"la venta en strike price + primas es igual al precio de la accion evolucionando a : ${(ganan_max/posiciones):.2f}")
+        
     conditional_volatility, message  = Opciones_class.garch_model(delta)
     
     #print(message)

@@ -170,7 +170,7 @@ class Market_data:
     # search historic market data
     def get_historical_data(self, ticker: str, type_: str, time: str, start_date, end_date):
         
-        print("\nSearching MarketData")
+        #print("\nSearching MarketData")
         if ticker == "":
             ticker = input("ingrese el ticker que quiere buscar: ")
             type_ = self.select_instrument_type()
