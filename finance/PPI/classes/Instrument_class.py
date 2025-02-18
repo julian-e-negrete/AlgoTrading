@@ -43,6 +43,15 @@ class Instrument:
     def Sharpe_ratio(self):
         risk_free_return = self.risk_free_rate / 252  # Tasa libre de riesgo diaria
         excess_return = self.df['Daily Return'].mean() - risk_free_return
-        sharpe_ratio = excess_return / self.df['Daily Return'].std()
+        sharpe_ratio_daily = excess_return / self.df['Daily Return'].std()
+        sharpe_ratio_annualized = sharpe_ratio_daily * (252 ** 0.5)  # Anualización
         
-        return sharpe_ratio
+        return sharpe_ratio_annualized
+    
+    def working_days_diff(self, start, end, calendar):
+        # Ensure start date is earlier than end date
+        if start > end:
+            start, end = end, start
+        # Include end date by adding 1 day
+        adjusted_end = end + 1
+        return calendar.businessDaysBetween(start, adjusted_end)

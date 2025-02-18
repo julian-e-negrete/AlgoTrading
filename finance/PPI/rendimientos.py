@@ -19,42 +19,65 @@ def main():
 
     
     portfolio = {
-        'GGAL': {
-            'type': 'ACCIONES',
-            'transactions': [{'shares': 5, 'purchase_price': 8460}]
-        },
-        'METR': {
-            'type': 'ACCIONES',
-            'transactions': [
-                {'shares': 73, 'purchase_price': 2740},
-                {'shares': 27, 'purchase_price': 2904},
-                {'shares': 100, 'purchase_price': 2879.21},
-                {'shares': 29, 'purchase_price': 2740}
+        
+        # 'METR': {
+        #     'type': 'ACCIONES',
+        #     'transactions': [
+        #         {'shares': 73, 'purchase_price': 2740},
+        #         {'shares': 27, 'purchase_price': 2904},
+        #         {'shares': 100, 'purchase_price': 2865},
+        #         {'shares': 29, 'purchase_price': 2750},
+        #         {'shares': 13, 'purchase_price': 2410}
                 
+        #     ]
+        # },
+        'PBR': {
+            'type': 'CEDEARS',
+            'transactions': [{'shares': 6, 'purchase_price': 16625}]
+        },
+        'EWZ': {
+            'type': 'CEDEARS',
+            'transactions': [{'shares': 3, 'purchase_price': 14850}]
+        }
+        ,
+        'NU': {
+            'type': 'CEDEARS',
+            'transactions': [{'shares': 4, 'purchase_price': 7970}]
+        }
+        ,
+        'BBD': {
+            'type': 'CEDEARS',
+            'transactions': [{'shares': 22, 'purchase_price': 2560}]
+        }
+        ,
+         'S28A5': {
+            'type': 'LETRAS',
+            'transactions': [
+                {'shares': 141336/100, 'purchase_price': 123.55}
             ]
         },
-        # 'BBD': {
-        #     'type': 'CEDEARS',
-        #     'transactions': [{'shares': 11, 'purchase_price': 2330}]
-        # },
-        # 'NU': {
-        #     'type': 'CEDEARS',
-        #     'transactions': [{'shares': 4, 'purchase_price': 6680}]
-        # }
-        # ,
         'BA37D': {
             'type': 'BONOS',
             'transactions': [
                 {'shares': 1, 'purchase_price': 78000},
                 {'shares': 0.98, 'purchase_price': 76531}
             ]
+        },
+        'TZX26': {
+            'type': 'BONOS',
+            'transactions': [
+                {'shares': 3240/100, 'purchase_price': 240}
+            ]
         }
+        
     }
 
     total_purchase_cost = 0
     # 20.000 base gracias a la venta de opciones de compra de METR(METC2900FE) por 20.000(precio de la prima: ~$211.68) 
     # + 3.5 * 1220 que es el pago de intereses de GD41
-    total_current_value =  3.5 * 1120
+    primes_gains = 3.5 * 1120 + 13000 + 15.2 * 5
+    total_current_value =  primes_gains
+    
     
 
     for ticker, details in portfolio.items():
@@ -91,6 +114,7 @@ def main():
      # Print portfolio totals
     print(f"Portfolio Total Purchase Cost: {total_purchase_cost:.2f}")
     print(f"Portfolio Current Value: {total_current_value:.2f}")
+    print(f"Portfolio Dividends/primes/amortizations: {primes_gains:.2f}")
     print(f"Portfolio Gain/Loss: {total_current_value - total_purchase_cost:.2f}")
     print(f"Portfolio Porcentual Gain/Loss: {((total_current_value - total_purchase_cost) * 100 / total_purchase_cost):.2f}%")
     

@@ -77,17 +77,18 @@ def main():
     option_price , message = quantlib_option_price(spot_price, strike_price, expiry, risk_free_rate, volatility)
     
     print("METC2900FE ", message)
-    total_value = 3100 * 100 + 2900 * 100
+    total_value = 3100 * 129 + 2900 * 100
     posiciones = 229
     #option_position = option_price * 100
     
     # calculo en base a la compra de una opcion put de venta en 2700(2720 es la tolerancia maxima)
     # 6761 * 100 
-    option_position = 29 * 2740 - (29 * 2740 * 0.0075) - 6258 
-    posiciones -= 29
-    print(f"primas obtenidas por venta de opcines: {option_position}")
+    option_position = 211.69 * 100 - 73 * 100
+    #posiciones -= 29
+    print(f"primas obtenidas por venta de opcines: ${option_position}")
     # 2830 es el precio de compra de las acciones promedio
-    inv_inicial = 2830 * posiciones + 2740 * 29 - 20000
+    inv_inicial = 2830 * posiciones
+    
     tolerance_max = (inv_inicial - option_position) / posiciones
     dif_porc = (((spot_price - tolerance_max) * 100 / spot_price) * -1)
     ganan_max = total_value + option_position
@@ -95,13 +96,19 @@ def main():
     print(f"valor minimo de accion en el cual se generan 0 ganancias: ${tolerance_max:.2f}")
     if( not(dif_porc % -1 == 0) ):
         print(f"\nabajo del precio de tolerancia por: -{dif_porc:.2f}%")
-        print(f"Actuales perdidas: $ {(spot_price * posiciones) - (tolerance_max * posiciones) :.2f}")
+        print(f"Actuales perdidas: $ {(spot_price * posiciones) - (tolerance_max * posiciones)  :.2f}")
     
-    print(f"Inversion inicial: ${inv_inicial}")
-    print(f"Venta en strike price + venta de primas: ${ganan_max:.2f}.")
-    print(f"Ganancia Nominal: ${(ganan_max - inv_inicial):.2f}, +{((ganan_max - inv_inicial) * 100 / (inv_inicial)):.2f}%") 
+    print(f"\nInversion inicial: ${inv_inicial}")
+    print(f"Venta en strike price + venta de primas: ${ganan_max:.2f}")
+    
+    print(f"\nGanancia Nominal: ${(ganan_max - inv_inicial):.2f}, {((ganan_max - inv_inicial) * 100 / (inv_inicial)):.2f}%") 
     print(f"la venta en strike price + primas es igual al precio de la accion evolucionando a : ${(ganan_max/posiciones):.2f}")
         
+        
+        
+    print(f"\n\nOPCIONES")
+    print(f"Ganancia nominal METC2900FE : ${211 * 100 - 73 * 100 :.2f} +{option_position * 100 / (211 * 100)  :.2f}%")
+    print(f"Ganancia nominal METC3100FE : ${211 * 100 - 73 * 100 :.2f} {option_position * 100 / (211 * 100)  :.2f}%")    
     conditional_volatility, message  = Opciones_class.garch_model(delta)
     
     #print(message)
@@ -113,7 +120,7 @@ def main():
     # El valor nocional es el precio del subyacente multiplicado por el tamaño del contrato.(el tamaño de los contratos es por cada opcion 100 acciones subyacentes)
     valor_nocional = 2920 * 100
     print("\n \nGarantia necesaria para la posicion actual: ")
-    print(f"\nGarantia sobre la posicion de venta de METC2900FE: ${(valor_nocional * 0.21):.2f}")
+    print(f"\nGarantia sobre la posicion de venta de METC2900FE: ${(valor_nocional * 0.11):.2f}")
     print(f"Garantia sobre la posicion de venta de METC3100FE: ${(valor_nocional * 0.10):.2f}\n")
     
     print(f"Garantia Total: ${(valor_nocional * 0.21 + valor_nocional * 0.10):.2f}")

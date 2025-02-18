@@ -27,7 +27,8 @@ sys.path.append(parent_dir)
 
 # Now import the required modules
 
-from classes import Account, Market_data
+from classes import Account, Market_data, Instrument
+import QuantLib as ql
 
 
 
@@ -76,24 +77,20 @@ def main():
     lst_historical = market.get_historical_data("METR","ACCIONES", "A-24HS", start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))
     df = pd.DataFrame(lst_historical)
     #print(df.columns)
-    
-    df['date'] = pd.to_datetime(df['date'])
-    df.set_index('date', inplace=True)
+    instrument_cl = Instrument (df)
 
-    # Calcular los rendimientos diarios de los precios
-    df['Daily Return'] = df['price'].pct_change()
-    df['Daily Return'] = df['Daily Return'].fillna(0)  # Replace NaN with 0 or any other value you prefer
     
-    delta = len(df['Daily Return'].dropna())  # Number of valid trading days in the period
+    
+    delta = len(instrument_cl.df['Daily Return'].dropna())  # Number of valid trading days in the period
 
     # Calcular la desviación estándar de los rendimientos diarios
-    daily_volatility = df['Daily Return'].std()
+    daily_volatility = instrument_cl.df['Daily Return'].std()
 
     # Calcular la volatilidad anualizada
     annual_volatility = daily_volatility * np.sqrt(delta)  # 252 días de negociación en un año
     
     
-    sigma  = garch_model(df, delta)
+    sigma  = garch_model(instrument_cl.df, delta)
     
     print(f"Desviación estándar diaria: {(daily_volatility * 100):.2f}%")
     print(f"Volatilidad en {delta} dias: {(annual_volatility * 100):.2f}%")
@@ -113,8 +110,17 @@ def main():
 
     
     S = precio_accion["price"]  # Precio actual de la acción (en pesos)
-    K = 2700  # Precio de ejercicio (en pesos)
-    days_to_expiry = 44  # Días hasta el vencimiento
+    K = 2700  # Precio de ejercicio (en pesos)    
+
+    calendar = ql.UnitedStates(ql.UnitedStates.NYSE)  # NYSE calendar for US holidays
+
+    today = datetime.today()
+    start_date = ql.Date(today.day, today.month, today.year)  # Convert to QuantLib Date
+    end_date = ql.Date(21, 2, 2025)  # Expiry date  
+
+    days_to_expiry = instrument_cl.working_days_diff(start_date, end_date, calendar)
+
+    #days_to_expiry = 44  # Días hasta el vencimiento
     r = 0.048  # Tasa libre de riesgo (4.8% anual, en proporción) sovereing bonds interest rate in a year
     T = days_to_expiry / 365  # Tiempo hasta el vencimiento en años 
     market_price = precio_opcion27["price"]  # Prima observada en el mercado
