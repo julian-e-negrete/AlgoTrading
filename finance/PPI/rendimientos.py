@@ -20,20 +20,18 @@ def main():
     
     portfolio = {
         
-        # 'METR': {
-        #     'type': 'ACCIONES',
-        #     'transactions': [
-        #         {'shares': 73, 'purchase_price': 2740},
-        #         {'shares': 27, 'purchase_price': 2904},
-        #         {'shares': 100, 'purchase_price': 2865},
-        #         {'shares': 29, 'purchase_price': 2750},
-        #         {'shares': 13, 'purchase_price': 2410}
+        'METR': {
+            'type': 'ACCIONES',
+            'transactions': [
+                {'shares': 132, 'purchase_price': 2793}
                 
-        #     ]
-        # },
+            ]
+        },
         'PBR': {
             'type': 'CEDEARS',
-            'transactions': [{'shares': 6, 'purchase_price': 16625}]
+            'transactions': [{'shares': 6, 'purchase_price': 16625},
+                             {'shares': 5, 'purchase_price': 16325}
+                             ]
         },
         'EWZ': {
             'type': 'CEDEARS',
@@ -47,7 +45,9 @@ def main():
         ,
         'BBD': {
             'type': 'CEDEARS',
-            'transactions': [{'shares': 22, 'purchase_price': 2560}]
+            'transactions': [{'shares': 50, 'purchase_price': 2576},
+                             {'shares': 20, 'purchase_price': 2460}
+                             ]
         }
         ,
          'S28A5': {
@@ -76,6 +76,8 @@ def main():
     # 20.000 base gracias a la venta de opciones de compra de METR(METC2900FE) por 20.000(precio de la prima: ~$211.68) 
     # + 3.5 * 1220 que es el pago de intereses de GD41
     primes_gains = 3.5 * 1120 + 13000 + 15.2 * 5
+    # venta de 100 acciones de metrogas a 2275 
+    primes_gains-= 54450
     total_current_value =  primes_gains
     
     
