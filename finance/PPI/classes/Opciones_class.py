@@ -17,6 +17,8 @@ from scipy.optimize import brentq
 
 import os
 
+import QuantLib as ql
+
 
 
 from classes.account_ppi import Account
@@ -88,7 +90,7 @@ class Opciones:
     
     
     
-    def black_scholes_model(S, K, T, r, sigma):
+    def black_scholes_model(self, S, K, T, r, sigma):
         """
         Calcula el precio de una opción Call usando el modelo Black-Scholes.
         S: Precio del subyacente
@@ -115,3 +117,25 @@ class Opciones:
             return iv
         except ValueError:
             return np.nan
+        
+        
+    def quantlib_option_price(self, spot_price, strike_price, expiry, risk_free_rate, volatility):
+        # Define option type
+        payoff = ql.PlainVanillaPayoff(ql.Option.Call, strike_price)
+        exercise = ql.EuropeanExercise(expiry)
+
+        # Create option
+        european_option = ql.VanillaOption(payoff, exercise)
+
+        # Set up pricing engine
+        spot_handle = ql.QuoteHandle(ql.SimpleQuote(spot_price))
+        rate_handle = ql.YieldTermStructureHandle(ql.FlatForward(0, ql.NullCalendar(), ql.QuoteHandle(ql.SimpleQuote(risk_free_rate)), ql.Actual360()))
+        vol_handle = ql.BlackVolTermStructureHandle(ql.BlackConstantVol(0, ql.NullCalendar(), ql.QuoteHandle(ql.SimpleQuote(volatility)), ql.Actual360()))
+        process = ql.BlackScholesProcess(spot_handle, rate_handle, vol_handle)
+
+        engine = ql.AnalyticEuropeanEngine(process)
+        european_option.setPricingEngine(engine)
+        
+
+        
+        return european_option.NPV(), f"Option Price: ${(european_option.NPV()):.2f}"

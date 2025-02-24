@@ -132,7 +132,7 @@ class Market_data:
     #search instrument, get all that is related to that instrument
     def get_instrument(self, ticker: str,market: str, type_instrument: str ):
         # Search Instrument
-        print("\nSearching instruments")
+        #print("\nSearching instruments")
         instruments = self.ppi.marketdata.search_instrument(ticker.upper(), "", market, type_instrument)
         
         table_data = [
@@ -147,12 +147,13 @@ class Market_data:
         box_width = 12
 
         # Generate the formatted box
+        """
         print("-" * (box_width+ 2))
         print(f"| {ticker.center(box_width - 2)} |")
         print("-" * (box_width + 2))
         # Print the table
         print(tabulate(table_data, headers=headers, tablefmt="grid"))
-        
+        """
         """
         for ins in instruments:
             print(f"Ticker: {ins["ticker"]}\t Descripcion: {ins["description"]}\t Moneda: {ins["currency"]}\t Tipo: {ins["type"]}")
@@ -269,42 +270,41 @@ class Market_data:
     
     def estimate_bond(self, ticker, cantidad, precio):
         print("\nEstimate bond\n")
-        if(ticker == ""):
-            ticker :str= input("Ingrese el ticker: ")
-            cantidad :int = input("Ingrese la cantidad: ")
-            precio :float = input("Ingrese el precio: ")
+
+        if ticker == "":
+            ticker = input("Ingrese el ticker: ").upper()
+            cantidad = int(input("Ingrese la cantidad: "))
+            precio = float(input("Ingrese el precio: "))
             
-        estimate = self.ppi.marketdata.estimate_bonds(EstimateBonds(ticker=ticker.upper(), date=datetime.today(), 
-        quantityType="PAPELES", quantity=cantidad, price=precio))
-        
-        
+        estimate = self.ppi.marketdata.estimate_bonds(
+            EstimateBonds(ticker=ticker, date=datetime.today(), quantityType="PAPELES", quantity=cantidad, price=precio)
+        )
+
         print("FLOWS")
         total = 0
-        for i in range(0, len(estimate["flows"])):
-            date_object = datetime.strptime(estimate["flows"][i]["cuttingDate"],  "%Y-%m-%dT%H:%M:%S%z" )
-
-            formatted_date = date_object.strftime("%d-%m-%Y")  # Example: "23-Dec-2024"
-
-            #print(estimate["sensitivity"][i])
-            print(f"Fecha: {formatted_date}", end="  ")
-            print(f"Residual Value: %{ '{:.2f}'.format(estimate["flows"][i]["residualValue"] * 100) }", end="  ")
-            print(f"Interes: ${ '{:.2f}'.format(estimate["flows"][i]["rent"]) }", end="  ")
-            print(f"Amortizacion: ${ '{:.2f}'.format(estimate["flows"][i]["amortization"]) }", end="  ")
-            print(f"Total: ${ '{:.2f}'.format(estimate["flows"][i]["total"]) }")
-            total += estimate["flows"][i]["total"]
-        
-        print(f"total obtenido en el vencimiento: {'{:.2f}'.format(total)}")
-        
-        
-        print("\n\nSENSISTIVITY")
-        for i in range(0, len(estimate["sensitivity"])):
-            print(f"TIR: {'{:.2f}'.format(estimate["sensitivity"][i]["tir"])}", end=" \t ")
-            print(f"Precio: ${'{:.2f}'.format(estimate["sensitivity"][i]["price"])}", end=" \t ")    
-            print(f"Paridad: {'{:.2f}'.format(estimate["sensitivity"][i]["parity"])}", end=" \t ") 
-            print(f"Variacion: %{'{:.2f}'.format(estimate["sensitivity"][i]["variation"] * 100)}")    
-           
-        print(estimate["tir"])    
+        for i in range(len(estimate["flows"])):
+            date_object = datetime.strptime(estimate["flows"][i]["cuttingDate"], "%Y-%m-%dT%H:%M:%S%z")
+            formatted_date = date_object.strftime("%d-%m-%Y")
             
+            print(f"Fecha: {formatted_date}", end="  ")
+            print(f"Residual Value: %{estimate['flows'][i]['residualValue'] * 100:.2f}", end="  ")
+            print(f"Interes: ${estimate['flows'][i]['rent']:.2f}", end="  ")
+            print(f"Amortizacion: ${estimate['flows'][i]['amortization']:.2f}", end="  ")
+            print(f"Total: ${estimate['flows'][i]['total']:.2f}")
+            
+            total += estimate["flows"][i]["total"]
+
+        print(f"Total obtenido en el vencimiento: {total:.2f}")
+
+        print("\n\nSENSITIVITY")
+        for i in range(len(estimate["sensitivity"])):
+            print(f"TIR: {estimate['sensitivity'][i]['tir']:.2f}", end=" \t ")
+            print(f"Precio: ${estimate['sensitivity'][i]['price']:.2f}", end=" \t ")
+            print(f"Paridad: {estimate['sensitivity'][i]['parity']:.2f}", end=" \t ")
+            print(f"Variacion: %{estimate['sensitivity'][i]['variation'] * 100:.2f}")
+
+        print(estimate["tir"])
+
                   
     #region realtime
     
