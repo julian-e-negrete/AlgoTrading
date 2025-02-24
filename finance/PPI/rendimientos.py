@@ -32,45 +32,33 @@ def main():
         ,
         'NU': {
             'type': 'CEDEARS',
-            'transactions': [{'shares': 4, 'purchase_price': 7970}]
+            'transactions': [{'shares': 4, 'purchase_price': 7970},
+                             {'shares': 2, 'purchase_price': 6730}
+                            ]
         }
         ,
         'BBD': {
             'type': 'CEDEARS',
             'transactions': [{'shares': 50, 'purchase_price': 2576},
-                             {'shares': 20, 'purchase_price': 2460}
+                             {'shares': 20, 'purchase_price': 2460},
+                             {'shares': 15, 'purchase_price': 2600}
                              ]
-        }
-        ,
-         'S28A5': {
-            'type': 'LETRAS',
-            'transactions': [
-                {'shares': 141336/100, 'purchase_price': 123.55}
-            ]
         },
-        'BA37D': {
-            'type': 'BONOS',
-            'transactions': [
-                {'shares': 1, 'purchase_price': 78000},
-                {'shares': 0.98, 'purchase_price': 76531}
-            ]
-        },
-        'TZX26': {
-            'type': 'BONOS',
-            'transactions': [
-                {'shares': 3240/100, 'purchase_price': 240}
-            ]
+        'MELI': {
+            'type': 'CEDEARS',
+            'transactions': [{'shares': 3, 'purchase_price': 24100}]
         }
-        
     }
 
     total_purchase_cost = 0
     # +$13.000 primas por venta de opciones call
     # + 3.5 * 1220 que es el pago de intereses de GD41
-    primes_gains = 3.5 * 1120 + 13000 + 15.2 * 5
+    # +$189.094 ganados operando opciones
+    # +$3.773  a favor con venta de deuda
+    primes_gains = 3.5 * 1120 + 13000 + 189094 + 3773
     #100.000 total perdida de $METR
     total_current_value = -100000
-    
+    total_current_value += primes_gains
     
 
     for ticker, details in portfolio.items():
@@ -116,5 +104,9 @@ def main():
 
 
 if __name__ == '__main__':
-    os.system("cls")
+    # windows
+    # os.system("cls")
+    # linux
+    os.system("clear")
+    
     main()
