@@ -40,22 +40,18 @@ def main():
         'BBD': {
             'type': 'CEDEARS',
             'transactions': [{'shares': 50, 'purchase_price': 2576},
-                             {'shares': 20, 'purchase_price': 2460},
-                             {'shares': 15, 'purchase_price': 2600}
+                             {'shares': 20, 'purchase_price': 2460}
                              ]
-        },
-        'MELI': {
-            'type': 'CEDEARS',
-            'transactions': [{'shares': 3, 'purchase_price': 24100}]
         }
     }
 
     total_purchase_cost = 0
     # +$13.000 primas por venta de opciones call
     # + 3.5 * 1220 que es el pago de intereses de GD41
-    # +$189.094 ganados operando opciones
+    # +$110.647 ganados operando opciones
     # +$3.773  a favor con venta de deuda
-    primes_gains = 3.5 * 1120 + 13000 + 189094 + 3773
+    # -$5.310 perdida de venta de acciones
+    primes_gains = 3.5 * 1120 + 13000 + 110647 + 3773 - 5310
     #100.000 total perdida de $METR
     total_current_value = -100000
     total_current_value += primes_gains

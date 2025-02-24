@@ -96,13 +96,13 @@ def main():
     print(f"Volatilidad en {delta} dias: {(annual_volatility * 100):.2f}%")
     
     
-    precio_accion = market.get_market_data("METR", "ACCIONES", "A-24HS")
+    precio_accion = market.get_market_data("GGAL", "ACCIONES", "A-24HS")
     
-    precio_opcion27 = market.get_market_data("GFGC75783F", "OPCIONES", "A-24HS")
+    precio_opcion27 = market.get_market_data("GFGC75783A", "OPCIONES", "A-24HS")
     
-    precio_opcion29 = market.get_market_data("GFGC77783F", "OPCIONES", "A-24HS")
+    precio_opcion29 = market.get_market_data("GFGC77783A", "OPCIONES", "A-24HS")
     
-    precio_opcion31 = market.get_market_data("GFGC82783F", "OPCIONES", "A-24HS")
+    precio_opcion31 = market.get_market_data("GFGC82783A", "OPCIONES", "A-24HS")
 
     # precio_opcion33 = market.get_market_data("METC3300FE", "OPCIONES", "A-24HS")
 
@@ -110,7 +110,7 @@ def main():
 
     
     S = precio_accion["price"]  # Precio actual de la acción (en pesos)
-    K = 2700  # Precio de ejercicio (en pesos)    
+    K = 75783  # Precio de ejercicio (en pesos)    
 
     calendar = ql.UnitedStates(ql.UnitedStates.NYSE)  # NYSE calendar for US holidays
 

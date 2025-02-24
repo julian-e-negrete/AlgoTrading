@@ -101,6 +101,8 @@ def main():
     # Define option parameters
     risk_free_rate = 0.048  # 4.8% risk-free rate(1 year bond interes rate usa sovereign bonds)
     volatility = annual_volatility  
+    #precio_opcion = market.get_market_data("GFGC91783A", "OPCIONES", "A-24HS")
+    #print(precio_opcion['price'])
     
     print(f"Actual stock price: {spot_price}")
     for expiration_date, items in sorted_grouped_data.items():
@@ -109,14 +111,17 @@ def main():
             strike_price = item['price']
             expiry = ql.Date(item['expiration_date'].day, item['expiration_date'].month, item['expiration_date'].year)
             
-            precio_opcion = market.get_market_data(item["ticker"].strip().upper(), "OPCIONES", "A-24HS")
+            # precio_opcion = market.get_market_data(item["ticker"].strip().upper(), "OPCIONES", "A-24HS")
+            
+            
             # no tiene volumen
-            if(precio_opcion['price'] == 0):
-                continue
+            print(item["ticker"])
+            #print(f"Precio actual de la opcion: {precio_opcion['price']}")
+            
             option_price , message = Opciones_class.quantlib_option_price(spot_price, strike_price, expiry, risk_free_rate, volatility)
             
-            print(item["ticker"])
-            print(f"Precio actual de la opcion: {precio_opcion['price']}")
+            
+            #print(f"Precio actual de la opcion: {precio_opcion['price']}")
             print(message)
             print()
         print()
@@ -179,5 +184,5 @@ def filter_and_group_by_expiration(gfgc_data,today, current_price):
 
 
 if __name__ == '__main__':
-    os.system("clear")
+    os.system("cls")
     main()
