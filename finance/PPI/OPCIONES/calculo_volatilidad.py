@@ -74,7 +74,7 @@ def main():
     
     
     #print(df.describe())
-    lst_historical = market.get_historical_data("METR","ACCIONES", "A-24HS", start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))
+    lst_historical = market.get_historical_data("GGAL","ACCIONES", "A-24HS", start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))
     df = pd.DataFrame(lst_historical)
     #print(df.columns)
     instrument_cl = Instrument (df)
@@ -98,15 +98,15 @@ def main():
     
     precio_accion = market.get_market_data("METR", "ACCIONES", "A-24HS")
     
-    precio_opcion27 = market.get_market_data("METC2700FE", "OPCIONES", "A-24HS")
+    precio_opcion27 = market.get_market_data("GFGC75783F", "OPCIONES", "A-24HS")
     
-    precio_opcion29 = market.get_market_data("METC2900FE", "OPCIONES", "A-24HS")
+    precio_opcion29 = market.get_market_data("GFGC77783F", "OPCIONES", "A-24HS")
     
-    precio_opcion31 = market.get_market_data("METC3100FE", "OPCIONES", "A-24HS")
+    precio_opcion31 = market.get_market_data("GFGC82783F", "OPCIONES", "A-24HS")
 
-    precio_opcion33 = market.get_market_data("METC3300FE", "OPCIONES", "A-24HS")
+    # precio_opcion33 = market.get_market_data("METC3300FE", "OPCIONES", "A-24HS")
 
-    precio_opcion35 = market.get_market_data("METC3500FE", "OPCIONES", "A-24HS")
+    # precio_opcion35 = market.get_market_data("METC3500FE", "OPCIONES", "A-24HS")
 
     
     S = precio_accion["price"]  # Precio actual de la acción (en pesos)
@@ -167,26 +167,26 @@ def main():
     
     print("-" * (box_width + 2))
 
-    market_price = precio_opcion33["price"]  # Prima observada en el mercado
-    K = 3300
-    print(f"Precio actual de la opcion CALL(METC3300FE): {market_price}")
-    call_price = black_scholes_model(S, K, T, r, annual_volatility)
+    # market_price = precio_opcion33["price"]  # Prima observada en el mercado
+    # K = 3300
+    # print(f"Precio actual de la opcion CALL(METC3300FE): {market_price}")
+    # call_price = black_scholes_model(S, K, T, r, annual_volatility)
 
-    print(f"Precio de la opción Call(METC3300FE) calculado: {call_price:.2f} pesos")
-    
-    # Calcular la volatilidad implícita
-    iv = implied_volatility_call(S, K, T, r, market_price)
-    print(f"Volatilidad implícita: {iv * 100:.2f}%")
-    
-    print("-" * (box_width + 2))
-    
+    # print(f"Precio de la opción Call(METC3300FE) calculado: {call_price:.2f} pesos")
 
-    market_price = precio_opcion35["price"]  # Prima observada en el mercado
-    K = 3500
-    print(f"Precio actual de la opcion CALL(METC3500FE): {market_price}")
-    call_price = black_scholes_model(S, K, T, r, annual_volatility)
+    # # Calcular la volatilidad implícita
+    # iv = implied_volatility_call(S, K, T, r, market_price)
+    # print(f"Volatilidad implícita: {iv * 100:.2f}%")
 
-    print(f"Precio de la opción Call(METC3500FE) calculado: {call_price:.2f} pesos")
+    # print("-" * (box_width + 2))
+
+
+    # market_price = precio_opcion35["price"]  # Prima observada en el mercado
+    # K = 3500
+    # print(f"Precio actual de la opcion CALL(METC3500FE): {market_price}")
+    # call_price = black_scholes_model(S, K, T, r, annual_volatility)
+
+    # print(f"Precio de la opción Call(METC3500FE) calculado: {call_price:.2f} pesos")
     
     # Calcular la volatilidad implícita
     iv = implied_volatility_call(S, K, T, r, market_price)
