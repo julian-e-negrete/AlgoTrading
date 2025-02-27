@@ -106,6 +106,16 @@ class Opciones:
         
         return call_price
 
+    def black_scholes_put(self, S, K, T, r, sigma):
+        # Calculate d1 and d2
+        d1 = (np.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
+        d2 = d1 - sigma * np.sqrt(T)
+        
+        # Calculate put option price
+        put_price = K * np.exp(-r * T) * norm.cdf(-d2) - S * norm.cdf(-d1)
+        return put_price
+    
+
     def implied_volatility_call(self, S, K, T, r, market_price):
         """ Calcula la volatilidad implícita usando Black-Scholes y el precio de mercado """
         def difference(sigma):

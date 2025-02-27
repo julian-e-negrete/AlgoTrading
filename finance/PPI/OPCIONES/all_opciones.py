@@ -81,7 +81,10 @@ def main():
     after_march = datetime.strptime("2025-03-22", date_format)
     
     # all call options from april to the end of the year
-    sorted_grouped_data = filter_and_group_by_expiration(gfgc_data, after_march, spot_price)
+    sorted_grouped_data_calls = filter_and_group_by_expiration(gfgc_data, after_march, spot_price)
+
+    # all PUT options from april to the end of the year
+    sorted_grouped_data_PUTS = filter_and_group_by_expiration(gfgv_data, after_march, spot_price)    
     
     # Print the results
     """
@@ -103,9 +106,9 @@ def main():
     volatility = annual_volatility  
     #precio_opcion = market.get_market_data("GFGC91783A", "OPCIONES", "A-24HS")
     #print(precio_opcion['price'])
-    
+    """
     print(f"Actual stock price: {spot_price}")
-    for expiration_date, items in sorted_grouped_data.items():
+    for expiration_date, items in sorted_grouped_data_calls.items():
         print(f"Expiration Date: {expiration_date.strftime('%d/%m/%Y')}")
         for item in items:
             strike_price = item['price']
@@ -118,11 +121,39 @@ def main():
             print(item["ticker"])
             #print(f"Precio actual de la opcion: {precio_opcion['price']}")
             
-            option_price , message = Opciones_class.quantlib_option_price(spot_price, strike_price, expiry, risk_free_rate, volatility)
+            option_price , message = Opciones_class.black_scholes_model(spot_price, strike_price, expiry, risk_free_rate, volatility)
             
             
             #print(f"Precio actual de la opcion: {precio_opcion['price']}")
             print(message)
+            print()
+        print()
+        """
+    today = ql.Date().todaysDate()
+    day_count = ql.Actual365Fixed()  # Day count convention
+        
+    print(f"Actual stock price: {spot_price}")
+    for expiration_date, items in sorted_grouped_data_PUTS.items():
+        print(f"Expiration Date: {expiration_date.strftime('%d/%m/%Y')}")
+        for item in items:
+            strike_price = item['price']
+            expiry = ql.Date(item['expiration_date'].day, item['expiration_date'].month, item['expiration_date'].year)
+            
+            # precio_opcion = market.get_market_data(item["ticker"].strip().upper(), "OPCIONES", "A-24HS")
+            # Calculate the time to maturity in years
+            
+            T = day_count.yearFraction(today, expiry)
+            
+            # no tiene volumen
+            print(item["ticker"])
+            #print(f"Precio actual de la opcion: {precio_opcion['price']}")
+            
+            option_price = Opciones_class.black_scholes_put(spot_price, strike_price, T, risk_free_rate, volatility)
+            
+            
+            
+            #print(f"Precio actual de la opcion: {precio_opcion['price']}")
+            print(print(f"Precio calculado {option_price:.2f} "))
             print()
         print()
 
