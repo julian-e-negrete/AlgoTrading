@@ -69,9 +69,16 @@ def main():
     
     
     
-    opciones_list = market.get_instrument(ticker, "BYMA", "OPCIONES")
+    # opciones_list = market.get_instrument(ticker, "BYMA", "OPCIONES")
     
+    for value in range(4978, 7978, 200):  # Incrementing by 200 to match your sequence
+        ticker = f"GFGV{value}3A"
+        print(ticker)
+        ticker_data = market.get_market_data(ticker, "OPCIONES", "A-24HS")
+        print(ticker_data)
+        
     
+    """
     # Regular expression pattern to extract AR$ price and expiration date
     pattern = r"AR\$ (\d+\.\d{2}) Vto\. (\d{2}/\d{2}/\d{4})"
     # Extracted information
@@ -86,8 +93,10 @@ def main():
     # all PUT options from april to the end of the year
     sorted_grouped_data_PUTS = filter_and_group_by_expiration(gfgv_data, after_march, spot_price)    
     
+    
+    
     # Print the results
-    """
+    
     for expiration_date, items in sorted_grouped_data.items():
         print(f"Expiration Date: {expiration_date.strftime('%d/%m/%Y')}")
         for item in items:
@@ -100,35 +109,11 @@ def main():
     ALL the information about calls with it's expiration time price and ticker processed
     """    
 
-
+    """
     # Define option parameters
     risk_free_rate = 0.048  # 4.8% risk-free rate(1 year bond interes rate usa sovereign bonds)
     volatility = annual_volatility  
-    #precio_opcion = market.get_market_data("GFGC91783A", "OPCIONES", "A-24HS")
-    #print(precio_opcion['price'])
-    """
-    print(f"Actual stock price: {spot_price}")
-    for expiration_date, items in sorted_grouped_data_calls.items():
-        print(f"Expiration Date: {expiration_date.strftime('%d/%m/%Y')}")
-        for item in items:
-            strike_price = item['price']
-            expiry = ql.Date(item['expiration_date'].day, item['expiration_date'].month, item['expiration_date'].year)
-            
-            # precio_opcion = market.get_market_data(item["ticker"].strip().upper(), "OPCIONES", "A-24HS")
-            
-            
-            # no tiene volumen
-            print(item["ticker"])
-            #print(f"Precio actual de la opcion: {precio_opcion['price']}")
-            
-            option_price , message = Opciones_class.black_scholes_model(spot_price, strike_price, expiry, risk_free_rate, volatility)
-            
-            
-            #print(f"Precio actual de la opcion: {precio_opcion['price']}")
-            print(message)
-            print()
-        print()
-        """
+    
     today = ql.Date().todaysDate()
     day_count = ql.Actual365Fixed()  # Day count convention
         
@@ -156,7 +141,7 @@ def main():
             print(print(f"Precio calculado {option_price:.2f} "))
             print()
         print()
-
+        """
     
     
 
@@ -215,5 +200,5 @@ def filter_and_group_by_expiration(gfgc_data,today, current_price):
 
 
 if __name__ == '__main__':
-    os.system("cls")
+    os.system("clear")
     main()
