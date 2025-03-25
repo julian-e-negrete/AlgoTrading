@@ -69,16 +69,11 @@ def main():
     
     
     
-    # opciones_list = market.get_instrument(ticker, "BYMA", "OPCIONES")
-    
-    for value in range(4978, 7978, 200):  # Incrementing by 200 to match your sequence
-        ticker = f"GFGV{value}3A"
-        print(ticker)
-        ticker_data = market.get_market_data(ticker, "OPCIONES", "A-24HS")
-        print(ticker_data)
+    opciones_list = market.get_instrument(ticker, "BYMA", "OPCIONES")
+
         
     
-    """
+    
     # Regular expression pattern to extract AR$ price and expiration date
     pattern = r"AR\$ (\d+\.\d{2}) Vto\. (\d{2}/\d{2}/\d{4})"
     # Extracted information
@@ -96,7 +91,7 @@ def main():
     
     
     # Print the results
-    
+    """
     for expiration_date, items in sorted_grouped_data.items():
         print(f"Expiration Date: {expiration_date.strftime('%d/%m/%Y')}")
         for item in items:
@@ -109,9 +104,9 @@ def main():
     ALL the information about calls with it's expiration time price and ticker processed
     """    
 
-    """
+    
     # Define option parameters
-    risk_free_rate = 0.048  # 4.8% risk-free rate(1 year bond interes rate usa sovereign bonds)
+    risk_free_rate = 0.30  # 30% tasa plazos fijos anuales en pesos
     volatility = annual_volatility  
     
     today = ql.Date().todaysDate()
@@ -124,24 +119,28 @@ def main():
             strike_price = item['price']
             expiry = ql.Date(item['expiration_date'].day, item['expiration_date'].month, item['expiration_date'].year)
             
-            # precio_opcion = market.get_market_data(item["ticker"].strip().upper(), "OPCIONES", "A-24HS")
+            precio_opcion = market.get_market_data(item["ticker"].strip().upper(), "OPCIONES", "A-24HS")
             # Calculate the time to maturity in years
             
             T = day_count.yearFraction(today, expiry)
             
             # no tiene volumen
-            print(item["ticker"])
-            #print(f"Precio actual de la opcion: {precio_opcion['price']}")
             
-            option_price = Opciones_class.black_scholes_put(spot_price, strike_price, T, risk_free_rate, volatility)
+            if(precio_opcion['price'] != 0):
+                print(item["ticker"])    
             
+                print(f"Precio actual de la opcion: {precio_opcion['price']}")
+                
+                
+                option_price = Opciones_class.black_scholes_put(spot_price, strike_price, T, risk_free_rate, volatility)
+                
+                
+                
+                #print(f"Precio actual de la opcion: {precio_opcion['price']}")
+                print(print(f"Precio calculado {option_price:.2f} "))
+                print("")
             
-            
-            #print(f"Precio actual de la opcion: {precio_opcion['price']}")
-            print(print(f"Precio calculado {option_price:.2f} "))
-            print()
-        print()
-        """
+        
     
     
 
