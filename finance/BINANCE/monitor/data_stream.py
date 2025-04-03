@@ -13,24 +13,36 @@ import os
 
 
 class BinanceMonitor:
-    def __init__(self):
-        self.data = pd.DataFrame()
+    def __init__(self, symbols):
+        self.symbols = symbols  
+        self.data_map = {symbol: pd.DataFrame() for symbol in symbols}
+        self.conn_keys = {}  # To store conn_keys per symbol
+        self.last_len = 0
 
     def start(self):
         self.twm = ThreadedWebsocketManager(api_key=BINANCE_API_KEY, api_secret=BINANCE_SECRET_KEY)
         self.twm.start()
-        self.conn_key = self.twm.start_kline_socket(callback=self.process_message, symbol=SYMBOL.lower(), interval=INTERVAL)
-        print(f"WebSocket started with connection key: {self.conn_key}")  # Confirming the conn_key is set
+        
+        for symbol in self.symbols:
+            conn_key = self.twm.start_kline_socket(
+                callback=lambda msg, s=symbol: self.process_message(msg, s),
+                symbol=symbol.lower(),
+                interval=INTERVAL
+            )
+            self.conn_keys[symbol] = conn_key
+        print(f"WebSocket started with connection key: {self.conn_keys}")  # Confirming the conn_key is set
         try:
             while True:
                 time.sleep(1)
         except KeyboardInterrupt:
-            print("Shutting down...")
+            print("Keyboard interrupt detected. Shutting down gracefully...")
+            self.stop()
+        except Exception as e:
+            print(f"Unexpected error: {str(e)}")
             self.stop()
         
 
-    def process_message(self, msg):
-        
+    def process_message(self, msg, symbol):
         if msg['e'] != 'kline':
             return
         kline = msg['k']
@@ -42,29 +54,29 @@ class BinanceMonitor:
             "close": float(kline['c']),
             "volume": float(kline['v']),
         }
-        self.data = pd.concat([self.data, pd.DataFrame([new_row])]).drop_duplicates(subset="timestamp")
-        os.system("clear")
-        self.data = self.data.tail(LOOKBACK)
-        
-        #print(f"Data length after update: {len(self.data)}")  # Log length after data update
-        warning_price(self.data["open"][0])
-        
-        if len(self.data) >= 14:
-            print(f"Data length: {len(self.data)}")
-            print(f"Latest data: {self.data.tail()}")
 
-            rsi = compute_rsi(self.data)
+        df = self.data_map[symbol]
+        df = pd.concat([df, pd.DataFrame([new_row])]).drop_duplicates(subset="timestamp")
+        df = df.tail(LOOKBACK)
+        self.data_map[symbol] = df
+        
+        print(f"{symbol} \n{df}\n")    
+        
+        #print(f"[{symbol}] Data length after update: {len(df)}")
+
+        if len(df) >= 14:
+            rsi = compute_rsi(df)
             evaluate_alerts(rsi)
-            #update_graph(self.data)
-        else:
-            print("self.data < 14")
+            warning_price(df['close'])
+            #update_graph(df, symbol)
+            
 
     def stop(self):
         if self.twm:
-            print("Attempting to stop WebSocket manager...")
             if hasattr(self, 'conn_key'):
-                print(f"Stopping WebSocket with conn_key: {self.conn_key}")
-                self.twm.stop_socket(self.conn_key)
+                for symbol, conn_key in self.conn_keys.items():
+                    print(f"Stopping WebSocket for {symbol} with conn_key: {conn_key}")
+                    self.twm.stop_socket(conn_key)
             else:
                 print("No connection key found. WebSocket might not have started properly.")
             

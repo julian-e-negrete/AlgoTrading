@@ -125,7 +125,6 @@ def main():
             T = day_count.yearFraction(today, expiry)
             
             # no tiene volumen
-            
             if(precio_opcion['price'] != 0):
                 print(item["ticker"])    
             

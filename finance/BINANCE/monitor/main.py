@@ -9,9 +9,11 @@ def shutdown_handler(signum, frame):
     
 if __name__ == "__main__":
     os.system("clear")
-    monitor = BinanceMonitor()
+    symbols_to_monitor = ["USDTARS", "BTCUSDT"]  # Add as needed
+    monitor = BinanceMonitor(symbols=symbols_to_monitor)
     try:
         signal.signal(signal.SIGINT, shutdown_handler)
         monitor.start()
-    except KeyboardInterrupt:
+    except Exception as e:
+        print("ERROR: {e.message}")
         print("[INFO] Shutting down...")
