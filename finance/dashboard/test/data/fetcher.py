@@ -17,9 +17,9 @@ def get_stock_data(ticker, period="1mo", interval="1d"):
     except Exception as e:
         return None
 
-def get_options_chain(ticker, expiry):
+def get_options_chain():
     try:
-        chain = yf.Ticker(ticker).option_chain(expiry)
+        chain = yf.Ticker("GGAL").option_chain("2025-06-20")
         
         chain.calls["strike"] /=  10
         chain.calls["strike"] *= ars_usd_last_price
