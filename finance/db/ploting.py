@@ -8,23 +8,23 @@ import mplfinance as mpf
 engine = create_engine(f'mysql+pymysql://{user}:{password}@{host}/{database}')
 
 # Your SQL query
-query = "SELECT * FROM cryptocurrency_data WHERE ticker = 'USDTARS' ORDER BY date ASC ;"
+query = "SELECT * FROM market_data WHERE ticker = 'GGAL' ORDER BY timestamp desc ;"
 
 # Fetch data and convert to DataFrame
 with engine.connect() as connection:
     df = pd.read_sql(query, connection)
     
 # Inspect the DataFrame
-df['date'] = pd.to_datetime(df['date'])
+df['timestamp'] = pd.to_datetime(df['timestamp'])
 
 # Set the 'date' column as the index of the DataFrame
-df.set_index('date', inplace=True)
+df.set_index('timestamp', inplace=True)
 
 
 print(df.head())
 print(df.dtypes)
 
-mpf.plot(df, type='candle', style='charles', volume=True, title='USDT/ARS')
+mpf.plot(df, type='candle', style='charles', volume=True, title=f"{df['ticker'][0]}")
 
     
     

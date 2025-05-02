@@ -1,0 +1,27 @@
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<div id="chart"></div>
+<script>
+function fetchDataAndPlot() {
+    fetch('/chart/')
+        .then(response => response.json())
+        .then(data => {
+            let trace = {
+                x: data.timestamp,
+                open: data.open,
+                high: data.high,
+                low: data.low,
+                close: data.close,
+                type: 'candlestick',
+                name: 'GGAL',
+            };
+            Plotly.newPlot('chart', [trace], {
+                title: 'GGAL Live Candlestick',
+                xaxis: { title: 'Time' },
+                yaxis: { title: 'Price' }
+            });
+        });
+}
+
+fetchDataAndPlot();
+setInterval(fetchDataAndPlot, 5000);  // Update every 5s
+</script>

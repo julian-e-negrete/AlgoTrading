@@ -13,7 +13,7 @@ async def receive_stock_data():
         U.S. T-Bill Futures,Jun-2025 (TBF3=F)
         period of data retrieving is 6days, so in sundays no data will be retrieved
         """
-        tickers = ["JPY=X","EURUSD=X", "^TNX", "^FVX", "TBF3=F", "^IRX" ,"ARS=X"]
+        tickers = ["JPY=X","EURUSD=X", "^TNX", "^FVX", "^IRX" ,"ARS=X", "ETH-USD"]
         await websocket.send(json.dumps({"tickers": tickers}))
         print(f"📤 Sent tickers: {tickers}")
         # Store received data
