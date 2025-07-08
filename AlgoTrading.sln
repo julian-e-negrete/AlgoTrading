@@ -1,0 +1,42 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "finance", "finance", "{B116B1B3-9AE8-BDA1-8853-C5505B0E90AE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dashboard_project", "dashboard_project", "{EBB8F8AA-C2C8-A404-5E47-7F69F3129CD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMvcApp", "finance\dashboard_project\MyMvcApp\MyMvcApp.csproj", "{94FC6B34-FA57-CB1D-4010-8A747481AD8B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MyMvcApp (1)", "MyMvcApp (1)", "{E85848F9-754C-A5C5-F105-C0720B7666C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMvcApp", "finance\dashboard_project\MyMvcApp\MyMvcApp\MyMvcApp.csproj", "{859D0C7E-2604-BDA1-1DDC-AE2BE6E4FA44}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94FC6B34-FA57-CB1D-4010-8A747481AD8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94FC6B34-FA57-CB1D-4010-8A747481AD8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94FC6B34-FA57-CB1D-4010-8A747481AD8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94FC6B34-FA57-CB1D-4010-8A747481AD8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{859D0C7E-2604-BDA1-1DDC-AE2BE6E4FA44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{859D0C7E-2604-BDA1-1DDC-AE2BE6E4FA44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{859D0C7E-2604-BDA1-1DDC-AE2BE6E4FA44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{859D0C7E-2604-BDA1-1DDC-AE2BE6E4FA44}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EBB8F8AA-C2C8-A404-5E47-7F69F3129CD0} = {B116B1B3-9AE8-BDA1-8853-C5505B0E90AE}
+		{94FC6B34-FA57-CB1D-4010-8A747481AD8B} = {EBB8F8AA-C2C8-A404-5E47-7F69F3129CD0}
+		{E85848F9-754C-A5C5-F105-C0720B7666C8} = {EBB8F8AA-C2C8-A404-5E47-7F69F3129CD0}
+		{859D0C7E-2604-BDA1-1DDC-AE2BE6E4FA44} = {E85848F9-754C-A5C5-F105-C0720B7666C8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {397F30E1-0417-4FC5-B09C-54E40CE66DBC}
+	EndGlobalSection
+EndGlobal
