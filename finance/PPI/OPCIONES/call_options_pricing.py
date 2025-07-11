@@ -32,9 +32,7 @@ def main():
             
    
     market = Market_data(account.ppi)
-    
-
-    
+   
      
     date_format = "%Y-%m-%d"
 
@@ -86,34 +84,22 @@ def main():
     sorted_grouped_data_calls = filter_and_group_by_expiration(gfgc_data, after_march, spot_price)
 
     # all PUT options from april to the end of the year
-    sorted_grouped_data_PUTS = filter_and_group_by_expiration(gfgv_data, after_march, spot_price)    
+    #sorted_grouped_data_PUTS = filter_and_group_by_expiration(gfgv_data, after_march, spot_price)    
     
-    
-    
-    # Print the results
-    """
-    for expiration_date, items in sorted_grouped_data.items():
-        print(f"Expiration Date: {expiration_date.strftime('%d/%m/%Y')}")
-        for item in items:
-                
-            print(f"  Ticker: {item['ticker']}, Price: {item['price']}, Expiration Date: {item['expiration_date']}")
-        print()
-    
-    """
-    """
-    ALL the information about calls with it's expiration time price and ticker processed
-    """    
-
     
     # Define option parameters
-    risk_free_rate = 0.30  # 30% tasa plazos fijos anuales en pesos
+    risk_free_rate = 0.30
+    # risk_free_rate = market.get_market_data("PESOS31", "CAUCIONES", "A-24HS")
+    # risk_free_rate = risk_free_rate["price"] / 100 # tasa plazos fijos en pesos/tasa de caucion
+    print(f"risk free rate: {risk_free_rate * 100}%")
+    
     volatility = annual_volatility  
     
     today = ql.Date().todaysDate()
     day_count = ql.Actual365Fixed()  # Day count convention
         
     print(f"Actual stock price: {spot_price}")
-    for expiration_date, items in sorted_grouped_data_PUTS.items():
+    for expiration_date, items in sorted_grouped_data_calls.items():
         print(f"Expiration Date: {expiration_date.strftime('%d/%m/%Y')}")
         for item in items:
             strike_price = item['price']
@@ -131,21 +117,20 @@ def main():
                 print(f"Precio actual de la opcion: {precio_opcion['price']}")
                 
                 
-                option_price = Opciones_class.black_scholes_put(spot_price, strike_price, T, risk_free_rate, volatility)
+                option_price = Opciones_class.quantlib_option_price(spot_price, strike_price, expiry, risk_free_rate, volatility)
+                # option_price = Opciones_class.black_scholes_model(spot_price, strike_price, T, risk_free_rate, volatility)
                 
-                
+                #print(option_price)
                 
                 #print(f"Precio actual de la opcion: {precio_opcion['price']}")
-                print(print(f"Precio calculado {option_price:.2f} "))
-                print("")
+                # print(print(f"Precio calculado {option_price:.2f} "))
+                # print("")
             
         
     
     
-
     
-   
-    
+ 
 
 # Function to extract the relevant information
 def extract_and_separate(data, pattern):

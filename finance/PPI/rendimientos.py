@@ -19,42 +19,29 @@ def main():
 
     
     portfolio = {
-        'PBR': {
+        'PBRD': {
             'type': 'CEDEARS',
-            'transactions': [{'shares': 6, 'purchase_price': 16625},
-                             {'shares': 5, 'purchase_price': 16325}
+            'transactions': [{'shares': 50, 'purchase_price': 12.13}
                              ]
         },
-        'EWZ': {
+        'BBDD': {
             'type': 'CEDEARS',
-            'transactions': [{'shares': 3, 'purchase_price': 14850}]
-        }
-        ,
-        'NU': {
-            'type': 'CEDEARS',
-            'transactions': [{'shares': 4, 'purchase_price': 7970},
-                             {'shares': 2, 'purchase_price': 6730}
-                            ]
-        }
-        ,
-        'BBD': {
-            'type': 'CEDEARS',
-            'transactions': [{'shares': 50, 'purchase_price': 2576},
-                             {'shares': 20, 'purchase_price': 2460}
+            'transactions': [{'shares': 200, 'purchase_price': 2.74}
                              ]
         }
     }
 
-    total_purchase_cost = 0
+    total_purchase_cost = 164 + 203 + 200 + 2300 + (150000/1270)
     # +$13.000 primas por venta de opciones call
     # + 3.5 * 1220 que es el pago de intereses de GD41
     # +$110.647 ganados operando opciones
     # +$3.773  a favor con venta de deuda
     # -$5.310 perdida de venta de acciones
-    primes_gains = 3.5 * 1120 + 13000 + 110647 + 3773 - 5310
-    #100.000 total perdida de $METR
-    total_current_value = -100000
-    total_current_value += primes_gains
+    # primes_gains = 3.5 * 1120 + 13000 + 110647 + 3773 - 5310
+    # #100.000 total perdida de $METR
+    # total_current_value = -100000
+    # total_current_value += primes_gains
+    total_current_value = 164 + 203 + 200 + 2300 + (150000/1270)
     
 
     for ticker, details in portfolio.items():
@@ -91,7 +78,7 @@ def main():
      # Print portfolio totals
     print(f"Portfolio Total Purchase Cost: {total_purchase_cost:.2f}")
     print(f"Portfolio Current Value: {total_current_value:.2f}")
-    print(f"Portfolio Dividends/primes/amortizations: {primes_gains:.2f}")
+    # print(f"Portfolio Dividends/primes/amortizations: {primes_gains:.2f}")
     print(f"Portfolio Gain/Loss: {total_current_value - total_purchase_cost:.2f}")
     print(f"Portfolio Porcentual Gain/Loss: {((total_current_value - total_purchase_cost) * 100 / total_purchase_cost):.2f}%")
     

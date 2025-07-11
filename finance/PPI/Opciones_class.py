@@ -91,7 +91,6 @@ class Opciones:
     
     
     def black_scholes_model(self, S, K, T, r, sigma):
-        # print(f"{S}, {K}, {T}, {r}, {sigma}")
         """
         Calcula el precio de una opción Call usando el modelo Black-Scholes.
         S: Precio del subyacente
@@ -149,4 +148,4 @@ class Opciones:
         
 
         
-        return european_option.NPV(), print(f"Option Price: ${(european_option.NPV()):.2f}")
+        return european_option.NPV(), f"Option Price: ${(european_option.NPV()):.2f}"
