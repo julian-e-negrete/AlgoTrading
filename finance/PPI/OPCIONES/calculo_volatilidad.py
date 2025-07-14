@@ -20,12 +20,11 @@ import traceback
 import sys
 import os
 
-# Dynamically add the parent directory (PPI) to sys.path
+
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.abspath(os.path.join(current_dir, '..'))
 sys.path.append(parent_dir)
 
-# Now import the required modules
 
 from classes import Account, Market_data, Instrument
 import QuantLib as ql
