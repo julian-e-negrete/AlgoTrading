@@ -8,24 +8,32 @@
     "net8.0": []
   },
   "packageFolders": {
-    "/home/haraidasan/.nuget/packages/": {}
+    "C:\\Users\\julian.negrete\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/haraidasan/Programming/Python/AlgoTrading/finance/dashboard_project/MyMvcApp/MyMvcApp/MyMvcApp.csproj",
+      "projectUniqueName": "C:\\00_Julian\\Personal\\python\\AlgoTrading\\finance\\dashboard_project\\MyMvcApp\\MyMvcApp\\MyMvcApp.csproj",
       "projectName": "MyMvcApp",
-      "projectPath": "/home/haraidasan/Programming/Python/AlgoTrading/finance/dashboard_project/MyMvcApp/MyMvcApp/MyMvcApp.csproj",
-      "packagesPath": "/home/haraidasan/.nuget/packages/",
-      "outputPath": "/home/haraidasan/Programming/Python/AlgoTrading/finance/dashboard_project/MyMvcApp/MyMvcApp/obj/",
+      "projectPath": "C:\\00_Julian\\Personal\\python\\AlgoTrading\\finance\\dashboard_project\\MyMvcApp\\MyMvcApp\\MyMvcApp.csproj",
+      "packagesPath": "C:\\Users\\julian.negrete\\.nuget\\packages\\",
+      "outputPath": "C:\\00_Julian\\Personal\\python\\AlgoTrading\\finance\\dashboard_project\\MyMvcApp\\MyMvcApp\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/home/haraidasan/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\julian.negrete\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -43,7 +51,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0": {
@@ -67,7 +76,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.411/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
