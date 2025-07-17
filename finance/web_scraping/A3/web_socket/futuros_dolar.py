@@ -48,15 +48,15 @@ def on_message(ws, message):
 
                 momentum = parsed['high'] - parsed['low']
                 price_change = float(parsed['prev_close']) - float(parsed['previous_settlement_price'])
-                spread = parsed['last_price'] - parsed['ask_price']
+                spread = parsed['ask_price'] - parsed['last_price']
 
                 # Output: formatted as a horizontal table
                 output = {
                     'Instrument': parsed['instrument'],
-                    'Bid Qty': parsed['bid_qty'],
+                    'Bid Volume': parsed['bid_qty'],
                     'bid Price': parsed['last_price'],
                     
-                    'ask qty': parsed['volume'],
+                    'ask Volume': parsed['volume'],
                     'ask price': parsed['ask_price'],
                     'last': parsed['prev_close'],
                     
