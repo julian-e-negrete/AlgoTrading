@@ -1,6 +1,7 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import time
+import pandas as pd
 
 url = "https://finance.yahoo.com/quote/BBD/options"
 
@@ -20,8 +21,16 @@ for row in rows:
         bid = cols[4].text.strip()
         ask = cols[5].text.strip()
         volume = cols[8].text.strip()
-        options_data.append((strike, last_price, bid, ask, volume))
+        open_interest = cols[9].text.strip()
+        options_data.append((strike, last_price, bid, ask, volume, open_interest))
 
 
-print(options_data)
+options_call = options_data[:int(len(options_data)/2)+1]
+options_put = options_data[int(len(options_data)/2)+1:]
+
 driver.quit()
+df_put = pd.DataFrame(options_put, columns=["Strike", "Last Price", "Bid", "Ask", "Volume", "Open Interest"])
+df_call = pd.DataFrame(options_call, columns=["Strike", "Last Price", "Bid", "Ask", "Volume", "Open Interest"])
+print(df_call)
+
+print(df_put)
